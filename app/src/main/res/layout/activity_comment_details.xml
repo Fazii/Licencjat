@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".CommentDetails"
     android:gravity="center_horizontal"
-    android:background="@color/cardview_light_background">
+    android:background="@color/cardview_light_background"
+    android:name="com.google.android.gms.maps.SupportMapFragment">
 
     <TextView
         android:id="@+id/d_textVievId"
@@ -50,4 +51,11 @@
         android:layout_height="wrap_content"
         android:text="Delete"
         android:onClick="onDeleteCommentClick"/>
+
+    <fragment
+        android:id="@+id/map2"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

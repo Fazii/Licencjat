@@ -11,6 +11,9 @@ public class ListItem {
     private String author;
     private String date;
     private String comment;
+    private double lat;
+    private double lng;
+
 
     public void setId(String id) {
         this.id = id;
@@ -51,4 +54,21 @@ public class ListItem {
     public String getBookComment() {
         return comment;
     }
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+
 }

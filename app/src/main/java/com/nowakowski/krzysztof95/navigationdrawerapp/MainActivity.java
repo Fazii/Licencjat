@@ -107,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
+            setTitle("Show Map");
+            ShowMapFragment showMapFragment = new ShowMapFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showMapFragment, "ShowMap");
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_manage) {
 

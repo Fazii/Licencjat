@@ -2,6 +2,9 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,15 +32,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static java.security.AccessController.getContext;
 
-public class CommentDetails extends AppCompatActivity {
+public class CommentDetails extends AppCompatActivity implements OnMapReadyCallback {
     private static final String url = "http://192.168.0.73:8888";
-    private RecyclerView recyclerView;
+    private GoogleMap mMap;
+    double lat;
+    double lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_details);
 
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        mapFragment.getMapAsync(this);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -40,6 +57,8 @@ public class CommentDetails extends AppCompatActivity {
         TextView textViewAuthor = (TextView) findViewById(R.id.d_textVievAuthor);
         TextView textViewCommentDate = (TextView) findViewById(R.id.d_textVievCommentDate);
         TextView textViewBookComment = (TextView) findViewById(R.id.d_textVievBookComment);
+        lat = getIntent().getDoubleExtra("lat", 0);
+        lng = getIntent().getDoubleExtra("lng", 0);
 
         textViewId.setText(String.format("Id: %s", getIntent().getStringExtra("id")));
         textViewBookId.setText(String.format("Book Id: %s", getIntent().getStringExtra("book_id")));
@@ -58,8 +77,8 @@ public class CommentDetails extends AppCompatActivity {
         return true;
     }
 
+
     private void DeleteCommentRequest(String id) {
-        recyclerView = (RecyclerView) findViewById(R.id.recycleView);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -94,4 +113,21 @@ public class CommentDetails extends AppCompatActivity {
         String id = getIntent().getStringExtra("id");
         DeleteCommentRequest(id);
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        googleMap.setMyLocationEnabled(true);
+
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(lat, lng)).title("Event");
+
+        googleMap.addMarker(marker);
+
+        CameraPosition Marker = CameraPosition.builder().target(new LatLng(lat, lng)).zoom(16).bearing(0).build();
+
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Marker));
+    }
+
 }

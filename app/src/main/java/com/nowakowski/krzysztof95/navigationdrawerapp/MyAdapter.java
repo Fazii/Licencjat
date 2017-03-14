@@ -51,6 +51,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 intent.putExtra("author", listItem.getAuthor());
                 intent.putExtra("comment_date", listItem.getCommentDate());
                 intent.putExtra("book_comment", listItem.getBookComment());
+                intent.putExtra("lat", listItem.getLat());
+                intent.putExtra("lng", listItem.getLng());
 
 
                 ((Activity) context).startActivityForResult(intent, DELETE_COMMENT_REQUEST);
