@@ -120,8 +120,6 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap = googleMap;
 
-        googleMap.setMyLocationEnabled(true);
-
         Location location = getMyLocation();
         lat = location.getLatitude();
         lng = location.getLongitude();
@@ -131,6 +129,11 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
 
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Liberty));
 
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(lat, lng)).title("You");
+
+        googleMap.addMarker(marker);
+
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -138,7 +141,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
                 googleMap.clear();
 
                 MarkerOptions marker = new MarkerOptions().position(
-                        new LatLng(point.latitude, point.longitude)).title("New Marker");
+                        new LatLng(point.latitude, point.longitude)).title("Event");
 
                 googleMap.addMarker(marker);
 
