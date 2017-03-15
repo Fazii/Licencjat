@@ -71,7 +71,6 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
 
         v = inflater.inflate(R.layout.fragment_add_comment, container, false);
 
-
         Button send = (Button) v.findViewById(R.id.sendButton);
         send.setOnClickListener(this);
         book_idEditText = (EditText) v.findViewById(R.id.book_idEditText);
@@ -99,16 +98,15 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
                 }
             }
         });
-
         return v;
     }
 
     @Override
-    public void onViewCreated(View view,Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mMapView = (MapView) v.findViewById(R.id.map1);
-        if(mMapView != null){
+        if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
             mMapView.getMapAsync(this);
@@ -151,24 +149,21 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     }
 
     private Location getMyLocation() {
-        // Get location from GPS if it's available
-        LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        // Location wasn't found, check the next most accurate place for the current location
         if (myLocation == null) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-            // Finds a provider that matches the criteria
             String provider = lm.getBestProvider(criteria, true);
-            // Use the provider to get the last known location
             myLocation = lm.getLastKnownLocation(provider);
         }
-
         return myLocation;
     }
 
     private void CreateNewCommentRequest(String book_id, String author, String comment) {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -183,7 +178,6 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         listItem.setComment(comment);
         listItem.setLat(lat);
         listItem.setLng(lng);
-
 
         Call<ListItem> call = service.sendComment(listItem);
 
@@ -204,10 +198,8 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         });
     }
 
-
     @Override
     public void onClick(View view) {
         validator.validate();
     }
-
 }

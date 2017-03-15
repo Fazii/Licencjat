@@ -54,10 +54,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 intent.putExtra("lat", listItem.getLat());
                 intent.putExtra("lng", listItem.getLng());
 
-
                 ((Activity) context).startActivityForResult(intent, DELETE_COMMENT_REQUEST);
-
-
             }
         });
     }
@@ -89,6 +86,4 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
-
-
 }

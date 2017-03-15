@@ -13,4 +13,5 @@
     <string name="send" />
     <string name="send1">Send</string>
     <string name="book_id">Book id</string>
+    <string name="Loading_data">Loading data...</string>
 </resources>

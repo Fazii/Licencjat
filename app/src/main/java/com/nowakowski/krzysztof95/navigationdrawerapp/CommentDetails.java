@@ -2,22 +2,16 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -30,7 +24,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static java.security.AccessController.getContext;
 
 public class CommentDetails extends AppCompatActivity implements OnMapReadyCallback {
     private static final String url = "http://192.168.0.73:8888";
@@ -77,7 +70,6 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
-
     private void DeleteCommentRequest(String id) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -104,7 +96,6 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onFailure(Call<ListItem> call, Throwable t) {
                 Toast.makeText(CommentDetails.this, "Error", Toast.LENGTH_LONG).show();
-                Log.d("Log", "OnFailure" + t.getMessage());
             }
         });
     }
@@ -129,5 +120,4 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
 
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Marker));
     }
-
 }

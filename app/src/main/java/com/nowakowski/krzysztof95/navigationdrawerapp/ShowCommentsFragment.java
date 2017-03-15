@@ -9,12 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,11 +27,9 @@ public class ShowCommentsFragment extends Fragment {
     private static final String url = "http://192.168.0.73:8888";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private RecyclerView recyclerView;
     private MyAdapter adapter;
     private FrameLayout emptyView;
-
     private List<ListItem> listItems;
 
 
@@ -67,7 +65,7 @@ public class ShowCommentsFragment extends Fragment {
 
     private void loadRecycleViewData() {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading data...");
+        progressDialog.setMessage(getString(R.string.Loading_data));
         progressDialog.show();
 
 
@@ -81,7 +79,6 @@ public class ShowCommentsFragment extends Fragment {
         Call<List<ListItem>> call = service.getBookDetails();
 
         call.enqueue(new Callback<List<ListItem>>() {
-
 
             @Override
             public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {

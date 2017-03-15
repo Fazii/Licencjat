@@ -1,8 +1,5 @@
 package com.nowakowski.krzysztof95.navigationdrawerapp;
 
-/**
- * Created by Krzysztof on 2017-03-02.
- */
 
 public class ListItem {
 
@@ -54,6 +51,7 @@ public class ListItem {
     public String getBookComment() {
         return comment;
     }
+
     public double getLat() {
         return lat;
     }
