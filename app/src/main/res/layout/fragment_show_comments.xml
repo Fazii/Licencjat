@@ -26,8 +26,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:lines="2"
-                android:text="No data available \n Swipe down to refresh"
-                android:textSize="30sp" />
+                android:text="@string/no_data_avalible"
+                android:textSize="25sp" />
         </FrameLayout>
 
 

@@ -24,13 +24,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowCommentsFragment extends Fragment {
 
-    private static final String url = "http://192.168.1.114:8888";
+    private final String url = "http://192.168.1.116:8888";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
     private MyAdapter adapter;
     private FrameLayout emptyView;
-    private List<ListItem> listItems;
+    public List<ListItem> listItems;
 
 
     public ShowCommentsFragment() {

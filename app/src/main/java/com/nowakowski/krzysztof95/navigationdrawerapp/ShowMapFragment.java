@@ -12,12 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,13 +29,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.Digits;
-import com.mobsandgeeks.saripaar.annotation.Max;
-import com.mobsandgeeks.saripaar.annotation.Min;
-import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,32 +40,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class AddCommentFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class ShowMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final String url = "http://192.168.1.116:8888";
-
+    private final String url = "http://192.168.1.116:8888";
 
     GoogleMap mGoogleMap;
     MapView mMapView;
     View v;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
-
-    double lat;
-    double lng;
-
-    @NotEmpty
-    private EditText titleEditText;
-    @NotEmpty
-    private EditText authorEditText;
-    @NotEmpty
-    private EditText descEditText;
-
-    Validator validator = new Validator(this);
+    private List<ListItem> listItems;
 
 
-    public AddCommentFragment() {
+    public ShowMapFragment() {
         // Required empty public constructor
     }
 
@@ -86,56 +66,99 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         mGoogleApiClient.connect();
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        v = inflater.inflate(R.layout.fragment_add_comment, container, false);
-
-        Button send = (Button) v.findViewById(R.id.sendButton);
-        send.setOnClickListener(this);
-        titleEditText = (EditText) v.findViewById(R.id.titleEditText);
-        authorEditText = (EditText) v.findViewById(R.id.authorEditText);
-        descEditText = (EditText) v.findViewById(R.id.descEditText);
-
-        validator.setValidationListener(new Validator.ValidationListener() {
-            @Override
-            public void onValidationSucceeded() {
-                if(lat == 0 && lng == 0){
-                    Toast.makeText(getContext(), "Chose event location", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                CreateNewCommentRequest(titleEditText.getText().toString(), authorEditText.getText().toString(), descEditText.getText().toString(), lat, lng);
-            }
-
-            @Override
-            public void onValidationFailed(List<ValidationError> errors) {
-                for (ValidationError error : errors) {
-                    View view = error.getView();
-                    String message = error.getCollatedErrorMessage(getContext());
-
-
-                    if (view instanceof EditText) {
-                        ((EditText) view).setError(message);
-                    } else {
-                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
-        return v;
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMapView = (MapView) v.findViewById(R.id.map1);
+        mMapView = (MapView) v.findViewById(R.id.ShowEventsMap);
         if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
             mMapView.getMapAsync(this);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        v = inflater.inflate(R.layout.fragment_show_map, container, false);
+
+        listItems = new ArrayList<>();
+
+        loadEventsMarkers();
+
+        return v;
+    }
+
+    private void loadEventsMarkers() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
+
+        Call<List<ListItem>> call = service.getEventDetails();
+
+        call.enqueue(new Callback<List<ListItem>>() {
+            @Override
+            public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {
+                try {
+                    listItems.clear();
+                    listItems = response.body();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListItem>> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,14));
+
+        for(int i=0; i<listItems.size(); i++) {
+
+            MarkerOptions marker = new MarkerOptions().position(
+                    new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(listItems.get(i).getEvent_title());
+            mGoogleMap.addMarker(marker);
+        }
+
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
 
@@ -156,70 +179,11 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
             } else {
                 checkLocationPermission();
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
-
-        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng point) {
-                googleMap.clear();
-
-                MarkerOptions marker = new MarkerOptions().position(
-                        new LatLng(point.latitude, point.longitude)).title("Event");
-
-                googleMap.addMarker(marker);
-
-                lat = point.latitude;
-                lng = point.longitude;
-            }
-        });
     }
-
-
-    private void CreateNewCommentRequest(String title, final String author, String desc, double lat, double lng) {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
-
-        final ListItem listItem = new ListItem();
-
-        listItem.setEvent_title(title);
-        listItem.setEvent_author(author);
-        listItem.setEvent_desc(desc);
-        listItem.setEvent_lat(lat);
-        listItem.setEvent_lng(lng);
-
-        Call<ListItem> call = service.sendComment(listItem);
-
-        call.enqueue(new Callback<ListItem>() {
-            @Override
-            public void onResponse(Call<ListItem> call, Response<ListItem> response) {
-                Toast.makeText(getContext(), "Send", Toast.LENGTH_LONG).show();
-                titleEditText.getText().clear();
-                authorEditText.getText().clear();
-                descEditText.getText().clear();
-            }
-
-            @Override
-            public void onFailure(Call<ListItem> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View view) {
-        validator.validate();
-    }
-
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private void checkLocationPermission() {
@@ -291,39 +255,5 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-    }
 
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
-
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
-    }
 }
