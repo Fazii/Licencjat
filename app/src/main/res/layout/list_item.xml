@@ -21,34 +21,30 @@
             android:background="?android:attr/selectableItemBackground">
 
             <TextView
-                android:id="@+id/textVievId"
-                android:text="Heading"
+                android:id="@+id/textVievTitle"
+                android:text="Title"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textVievBookId"
-                android:text="Description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/textVievAuthor"
+                android:text="Author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textVievDesc"
                 android:text="Description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textVievCommentDate"
-                android:text="Description"
+                android:id="@+id/textVievDate"
+                android:text="Date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/textVievBookComment"
-                android:text="Description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

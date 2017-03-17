@@ -2,9 +2,12 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CommentDetails extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String url = "http://192.168.0.73:8888";
+    private static final String url = "http://192.168.1.114:8888";
     private GoogleMap mMap;
     double lat;
     double lng;
@@ -35,6 +38,7 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_details);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
@@ -45,19 +49,18 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        TextView textViewId = (TextView) findViewById(R.id.d_textVievId);
-        TextView textViewBookId = (TextView) findViewById(R.id.d_textVievBookId);
-        TextView textViewAuthor = (TextView) findViewById(R.id.d_textVievAuthor);
-        TextView textViewCommentDate = (TextView) findViewById(R.id.d_textVievCommentDate);
-        TextView textViewBookComment = (TextView) findViewById(R.id.d_textVievBookComment);
+
+        TextView textViewTitle = (TextView) findViewById(R.id.d_textViewTitle);
+        TextView textViewAuthor = (TextView) findViewById(R.id.d_textViewAuthor);
+        TextView textViewDesc = (TextView) findViewById(R.id.d_textViewDesc);
+        TextView textViewTime = (TextView) findViewById(R.id.d_textViewTime);
         lat = getIntent().getDoubleExtra("lat", 0);
         lng = getIntent().getDoubleExtra("lng", 0);
 
-        textViewId.setText(String.format("Id: %s", getIntent().getStringExtra("id")));
-        textViewBookId.setText(String.format("Book Id: %s", getIntent().getStringExtra("book_id")));
-        textViewAuthor.setText(String.format("Author: %s", getIntent().getStringExtra("author")));
-        textViewCommentDate.setText(String.format("Comment date: %s", getIntent().getStringExtra("comment_date")));
-        textViewBookComment.setText(String.format("Comment: %s", getIntent().getStringExtra("book_comment")));
+        textViewTitle.setText(String.format("Tytuł: %s", getIntent().getStringExtra("title")));
+        textViewAuthor.setText(String.format("Autor: %s", getIntent().getStringExtra("author")));
+        textViewDesc.setText(String.format("Opis: %s", getIntent().getStringExtra("desc")));
+        textViewTime.setText(String.format("Data dodania: %s", getIntent().getStringExtra("time")));
     }
 
     @Override
@@ -70,7 +73,7 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
-    private void DeleteCommentRequest(String id) {
+    private void DeleteCommentRequest(int id) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -80,14 +83,14 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
 
         final ListItem listItem = new ListItem();
 
-        listItem.setId(id);
+        listItem.setEvent_id(id);
 
         Call<ListItem> call = service.DeleteComment(listItem);
 
         call.enqueue(new Callback<ListItem>() {
             @Override
             public void onResponse(Call<ListItem> call, Response<ListItem> response) {
-                Toast.makeText(CommentDetails.this, "Comment Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CommentDetails.this, R.string.event_deleted, Toast.LENGTH_SHORT).show();
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
@@ -101,7 +104,7 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void onDeleteCommentClick(View view) {
-        String id = getIntent().getStringExtra("id");
+        int id = getIntent().getIntExtra("id", 0);
         DeleteCommentRequest(id);
     }
 
@@ -109,15 +112,21 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        googleMap.setMyLocationEnabled(true);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                googleMap.setMyLocationEnabled(true);
+            }
+        }
+        else {
+            googleMap.setMyLocationEnabled(true);
+            }
 
         MarkerOptions marker = new MarkerOptions().position(
                 new LatLng(lat, lng)).title("Event");
-
         googleMap.addMarker(marker);
-
         CameraPosition Marker = CameraPosition.builder().target(new LatLng(lat, lng)).zoom(16).bearing(0).build();
-
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Marker));
     }
 }

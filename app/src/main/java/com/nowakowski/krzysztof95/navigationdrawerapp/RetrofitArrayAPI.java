@@ -11,12 +11,12 @@ import retrofit2.http.POST;
 
 interface RetrofitArrayAPI {
 
-    @GET("/api/v1/comments")
-    Call<List<ListItem>> getBookDetails();
+    @GET("/api/v1/events")
+    Call<List<ListItem>> getEventDetails();
 
-    @POST("/api/v1/comments")
+    @POST("/api/v1/events")
     Call<ListItem> sendComment(@Body ListItem listItem);
 
-    @HTTP(method = "DELETE", path = "/api/v1/comments", hasBody = true)
+    @HTTP(method = "DELETE", path = "/api/v1/events", hasBody = true)
     Call<ListItem> DeleteComment(@Body ListItem listItem);
 }

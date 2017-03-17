@@ -6,11 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
@@ -49,14 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Add action
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         showCommentsFragment = new ShowCommentsFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowComments");
+        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowEvents");
         fragmentTransaction.commit();
     }
 
@@ -110,24 +100,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            setTitle("Show Comments");
+            setTitle(getString(R.string.show_events));
             ShowCommentsFragment showCommentsFragment = new ShowCommentsFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowComments");
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowEvents");
             fragmentTransaction.commit();
         } else if (id == R.id.nav_gallery) {
-            setTitle("Add Comment");
+            setTitle(getString(R.string.add_event));
             AddCommentFragment addCommentFragment = new AddCommentFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, addCommentFragment, "AddComment");
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, addCommentFragment, "AddEvent");
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
-            setTitle("Show Map");
-            ShowMapFragment showMapFragment = new ShowMapFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showMapFragment, "ShowMap");
-            fragmentTransaction.commit();
+
 
         } else if (id == R.id.nav_manage) {
 

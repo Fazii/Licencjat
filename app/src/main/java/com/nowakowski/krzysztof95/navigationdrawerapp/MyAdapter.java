@@ -36,23 +36,22 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ListItem listItem = listItems.get(position);
 
-        holder.textViewId.setText(listItem.getId());
-        holder.textViewBookId.setText(listItem.getBookId());
-        holder.textViewAuthor.setText(listItem.getAuthor());
-        holder.textViewCommentDate.setText(listItem.getCommentDate());
-        holder.textViewBookComment.setText(listItem.getBookComment());
+        holder.textViewTitle.setText(listItem.getEvent_title());
+        holder.textViewAuthor.setText(listItem.getEvent_author());
+        holder.textViewDesc.setText(listItem.getEvent_desc());
+        holder.textViewDate.setText(listItem.getEvent_time());
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CommentDetails.class);
-                intent.putExtra("id", listItem.getId());
-                intent.putExtra("book_id", listItem.getBookId());
-                intent.putExtra("author", listItem.getAuthor());
-                intent.putExtra("comment_date", listItem.getCommentDate());
-                intent.putExtra("book_comment", listItem.getBookComment());
-                intent.putExtra("lat", listItem.getLat());
-                intent.putExtra("lng", listItem.getLng());
+                intent.putExtra("id", listItem.getEvent_id());
+                intent.putExtra("title", listItem.getEvent_title());
+                intent.putExtra("author", listItem.getEvent_author());
+                intent.putExtra("desc", listItem.getEvent_desc());
+                intent.putExtra("date", listItem.getEvent_time());
+                intent.putExtra("lat", listItem.getEvent_lat());
+                intent.putExtra("lng", listItem.getEvent_lng());
 
                 ((Activity) context).startActivityForResult(intent, DELETE_COMMENT_REQUEST);
             }
@@ -67,22 +66,20 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewId;
-        TextView textViewBookId;
+        TextView textViewTitle;
         TextView textViewAuthor;
-        TextView textViewCommentDate;
-        TextView textViewBookComment;
+        TextView textViewDesc;
+        TextView textViewDate;
         LinearLayout linearLayout;
 
 
         ViewHolder(View itemView) {
             super(itemView);
 
-            textViewId = (TextView) itemView.findViewById(R.id.textVievId);
-            textViewBookId = (TextView) itemView.findViewById(R.id.textVievBookId);
+            textViewTitle = (TextView) itemView.findViewById(R.id.textVievTitle);
             textViewAuthor = (TextView) itemView.findViewById(R.id.textVievAuthor);
-            textViewCommentDate = (TextView) itemView.findViewById(R.id.textVievCommentDate);
-            textViewBookComment = (TextView) itemView.findViewById(R.id.textVievBookComment);
+            textViewDesc = (TextView) itemView.findViewById(R.id.textVievDesc);
+            textViewDate = (TextView) itemView.findViewById(R.id.textVievDate);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }

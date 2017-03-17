@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowCommentsFragment extends Fragment {
 
-    private static final String url = "http://192.168.0.73:8888";
+    private static final String url = "http://192.168.1.114:8888";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -76,7 +76,7 @@ public class ShowCommentsFragment extends Fragment {
 
         RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
 
-        Call<List<ListItem>> call = service.getBookDetails();
+        Call<List<ListItem>> call = service.getEventDetails();
 
         call.enqueue(new Callback<List<ListItem>>() {
 

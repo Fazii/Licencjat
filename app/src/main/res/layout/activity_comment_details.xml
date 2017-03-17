@@ -11,37 +11,30 @@
     android:background="@color/cardview_light_background"
     android:name="com.google.android.gms.maps.SupportMapFragment">
 
-    <TextView
-        android:id="@+id/d_textVievId"
-        android:text="Heading"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/nav_header_vertical_spacing"/>
 
     <TextView
-        android:id="@+id/d_textVievBookId"
-        android:text="Description"
+        android:id="@+id/d_textViewTitle"
+        android:text="Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
     <TextView
-        android:id="@+id/d_textVievAuthor"
-        android:text="Description"
+        android:id="@+id/d_textViewAuthor"
+        android:text="Author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
     <TextView
-        android:id="@+id/d_textVievCommentDate"
+        android:id="@+id/d_textViewDesc"
         android:text="Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
     <TextView
-        android:id="@+id/d_textVievBookComment"
-        android:text="Description"
+        android:id="@+id/d_textViewTime"
+        android:text="Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>

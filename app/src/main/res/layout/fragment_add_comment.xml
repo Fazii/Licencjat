@@ -9,32 +9,33 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/book_idEditText"
-        android:hint="@string/book_id"/>
+        android:id="@+id/titleEditText"
+        android:hint="@string/title"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/authorEditText"
         android:hint="@string/author"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lines="3"
-        android:id="@+id/commentEditText"
-        android:hint="@string/comment"/>
+        android:lines="2"
+        android:id="@+id/descEditText"
+        android:hint="@string/event_desc"/>
+
+
+    <com.google.android.gms.maps.MapView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/map1"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sendButton"
         android:layout_gravity="center"
-        android:text="@string/send1"/>
-
-    <com.google.android.gms.maps.MapView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map1"/>
+        android:text="@string/send"/>
 </LinearLayout>
