@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CommentDetails extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String url = "http://192.168.1.116:8888";
+    private static final String url = "http://192.168.1.117:8888";
     private GoogleMap mMap;
     double lat;
     double lng;

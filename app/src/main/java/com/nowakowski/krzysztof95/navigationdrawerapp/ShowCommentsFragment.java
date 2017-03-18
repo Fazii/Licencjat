@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowCommentsFragment extends Fragment {
 
-    private final String url = "http://192.168.1.116:8888";
+    private final String url = "http://192.168.1.117:8888";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;

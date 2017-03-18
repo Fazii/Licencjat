@@ -18,7 +18,8 @@
     <string name="show_map">Show Map</string>
     <string name="title">Tytuł wydarzenia</string>
     <string name="event_deleted">Usunięto wydarzenie</string>
-    <string name="show_EventsMap">Pokaż mapę wydarzeń</string>
+    <string name="show_EventsMap">Mapa wydarzeń</string>
     <string name="no_data_avalible">Brak danych   Przeciągnij aby odświerzyć</string>
     <string name="evants_map">Mapa wydarzeń</string>
+    <string name="join">Dołącz</string>
 </resources>

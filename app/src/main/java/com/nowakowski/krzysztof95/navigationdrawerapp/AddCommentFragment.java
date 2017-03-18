@@ -51,7 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddCommentFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final String url = "http://192.168.1.116:8888";
+    private static final String url = "http://192.168.1.117:8888";
 
 
     GoogleMap mGoogleMap;

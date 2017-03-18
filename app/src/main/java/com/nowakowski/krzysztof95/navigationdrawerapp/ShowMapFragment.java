@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,9 +29,11 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,10 +43,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class ShowMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class ShowMapFragment extends Fragment implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
-    private final String url = "http://192.168.1.116:8888";
+    private final String url = "http://192.168.1.117:8888";
 
     GoogleMap mGoogleMap;
     MapView mMapView;
@@ -51,6 +57,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     private List<ListItem> listItems;
+    private HashMap<Integer, ListItem> markerData = new HashMap<>();
 
 
     public ShowMapFragment() {
@@ -81,7 +88,6 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_show_map, container, false);
 
         listItems = new ArrayList<>();
@@ -115,7 +121,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
 
             @Override
             public void onFailure(Call<List<ListItem>> call, Throwable t) {
-
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -148,19 +154,21 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,14));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
 
-        for(int i=0; i<listItems.size(); i++) {
+        for (int i = 0; i < listItems.size(); i++) {
 
             MarkerOptions marker = new MarkerOptions().position(
-                    new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(listItems.get(i).getEvent_title());
+                    new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(Integer.toString(listItems.get(i).getEvent_id()));
             mGoogleMap.addMarker(marker);
+            markerData.put(Integer.parseInt(marker.getTitle()), listItems.get(i));
         }
 
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
@@ -183,9 +191,47 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
+
+        mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker arg0) {
+
+                View v = getActivity().getLayoutInflater().inflate(R.layout.window_layout, null);
+                v.bringToFront();
+                ListItem listItem = markerData.get(Integer.parseInt(arg0.getTitle()));
+
+//                TODO add interactive info window: https://github.com/Appolica/InteractiveInfoWindowAndroid
+                TextView title = (TextView) v.findViewById(R.id.m_textViewTitle);
+                TextView author = (TextView) v.findViewById(R.id.m_textViewAuthor);
+                TextView desc = (TextView) v.findViewById(R.id.m_textViewDesc);
+                TextView time = (TextView) v.findViewById(R.id.m_textViewTime);
+
+                title.setText(String.format("Tytuł: %s", listItem.getEvent_title()));
+                author.setText(String.format("Autor: %s", listItem.getEvent_author()));
+                desc.setText(String.format("Opis: %s ", listItem.getEvent_desc()));
+                time.setText(String.format("Data dodania: %s", listItem.getEvent_time()));
+
+                return v;
+            }
+        });
+
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return false;
+            }
+        });
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -205,7 +251,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                                 //Prompt the user once explanation has been shown
                                 ActivityCompat.requestPermissions(getActivity(),
                                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION );
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
                             }
                         })
                         .create()
@@ -216,7 +262,7 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION );
+                        MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
@@ -254,6 +300,4 @@ public class ShowMapFragment extends Fragment implements OnMapReadyCallback, Goo
             // permissions this app might request
         }
     }
-
-
 }

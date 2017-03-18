@@ -49,7 +49,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 intent.putExtra("title", listItem.getEvent_title());
                 intent.putExtra("author", listItem.getEvent_author());
                 intent.putExtra("desc", listItem.getEvent_desc());
-                intent.putExtra("date", listItem.getEvent_time());
+                intent.putExtra("time", listItem.getEvent_time());
                 intent.putExtra("lat", listItem.getEvent_lat());
                 intent.putExtra("lng", listItem.getEvent_lng());
 
