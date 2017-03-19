@@ -60,6 +60,9 @@ public class ShowCommentsFragment extends Fragment {
 
         loadRecycleViewData();
 
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+
         return v;
     }
 
@@ -85,6 +88,7 @@ public class ShowCommentsFragment extends Fragment {
                 recyclerView.setVisibility(View.VISIBLE);
                 emptyView.setVisibility(View.GONE);
 //              TODO add empty list support
+
                 try {
                     listItems.clear();
                     listItems = response.body();
@@ -95,6 +99,11 @@ public class ShowCommentsFragment extends Fragment {
                     adapter = new MyAdapter(listItems, getContext());
 
                     recyclerView.setAdapter(adapter);
+
+                    if(adapter.getItemCount() == 0){
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -121,7 +121,6 @@ public class ShowMapFragment extends Fragment implements
 
             @Override
             public void onFailure(Call<List<ListItem>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
             }
         });
     }

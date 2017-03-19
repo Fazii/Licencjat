@@ -14,27 +14,27 @@
 
     <TextView
         android:id="@+id/d_textViewTitle"
-        android:text="Title"
+        android:text="@string/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
     <TextView
         android:id="@+id/d_textViewAuthor"
-        android:text="Author"
+        android:text="@string/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
     <TextView
         android:id="@+id/d_textViewDesc"
-        android:text="Description"
+        android:text="@string/event_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
     <TextView
         android:id="@+id/d_textViewTime"
-        android:text="Time"
+        android:text="@string/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"/>
@@ -42,7 +42,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="@string/delete"
         android:onClick="onDeleteCommentClick"/>
 
     <fragment

@@ -1,25 +1,27 @@
 <resources>
-    <string name="app_name">NavigationDrawerApp</string>
+    <string name="app_name">MeetWithMe</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Otwórz menu nawigacji</string>
+    <string name="navigation_drawer_close">Zamknij menu nawigacji</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Ustawienia</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="author">Autor wydarzenia</string>
     <string name="event_desc">Opis wydarzenia</string>
     <string name="send">Wyślij</string>
-    <string name="book_id">Book id</string>
-    <string name="Loading_data">Loading data...</string>
+    <string name="sent">Wysłano</string>
+    <string name="Loading_data">Ładowanie danych...</string>
     <string name="show_events">Wyświetl wydarzenia</string>
     <string name="add_event">Dodaj wydarzenie</string>
-    <string name="show_map">Show Map</string>
+    <string name="show_map">Pokaż mapę</string>
     <string name="title">Tytuł wydarzenia</string>
     <string name="event_deleted">Usunięto wydarzenie</string>
     <string name="show_EventsMap">Mapa wydarzeń</string>
-    <string name="no_data_avalible">Brak danych   Przeciągnij aby odświerzyć</string>
+    <string name="no_data_avalible">Upsss… \n Coś poszło nie tak :(\n\n Przeciągnij w dół aby odświeżyć</string>
     <string name="evants_map">Mapa wydarzeń</string>
     <string name="join">Dołącz</string>
+    <string name="choose_event_location">Wybierz lokalizajcę wydarzenia</string>
+    <string name="error">Błąd</string>
+    <string name="delete">Usuń</string>
+    <string name="time">Data wydarzenia</string>
 </resources>

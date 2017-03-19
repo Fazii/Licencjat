@@ -63,11 +63,11 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     double lat;
     double lng;
 
-    @NotEmpty
+    @NotEmpty(message = "To pole jest wymagane")
     private EditText titleEditText;
-    @NotEmpty
+    @NotEmpty(message = "To pole jest wymagane")
     private EditText authorEditText;
-    @NotEmpty
+    @NotEmpty(message = "To pole jest wymagane")
     private EditText descEditText;
 
     Validator validator = new Validator(this);
@@ -103,7 +103,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
             @Override
             public void onValidationSucceeded() {
                 if(lat == 0 && lng == 0){
-                    Toast.makeText(getContext(), "Chose event location", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.choose_event_location, Toast.LENGTH_LONG).show();
                     return;
                 }
                 CreateNewCommentRequest(titleEditText.getText().toString(), authorEditText.getText().toString(), descEditText.getText().toString(), lat, lng);
@@ -202,7 +202,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         call.enqueue(new Callback<ListItem>() {
             @Override
             public void onResponse(Call<ListItem> call, Response<ListItem> response) {
-                Toast.makeText(getContext(), "Send", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.sent), Toast.LENGTH_LONG).show();
                 titleEditText.getText().clear();
                 authorEditText.getText().clear();
                 descEditText.getText().clear();
@@ -210,7 +210,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onFailure(Call<ListItem> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
             }
         });
     }
