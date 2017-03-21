@@ -12,14 +12,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -34,9 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.Digits;
-import com.mobsandgeeks.saripaar.annotation.Max;
-import com.mobsandgeeks.saripaar.annotation.Min;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.util.List;
@@ -51,7 +47,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddCommentFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final String url = "http://192.168.1.117:8888";
+    private static final String url = "http://192.168.0.73:8888";
 
 
     GoogleMap mGoogleMap;
@@ -59,6 +55,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     View v;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
+    ActionProcessButton send;
 
     double lat;
     double lng;
@@ -77,32 +74,25 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         // Required empty public constructor
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_add_comment, container, false);
 
-        Button send = (Button) v.findViewById(R.id.sendButton);
-        send.setOnClickListener(this);
         titleEditText = (EditText) v.findViewById(R.id.titleEditText);
         authorEditText = (EditText) v.findViewById(R.id.authorEditText);
         descEditText = (EditText) v.findViewById(R.id.descEditText);
 
+        send = (ActionProcessButton) v.findViewById(R.id.sendButton);
+        send.setOnClickListener(this);
+
         validator.setValidationListener(new Validator.ValidationListener() {
             @Override
             public void onValidationSucceeded() {
-                if(lat == 0 && lng == 0){
+                if (lat == 0 && lng == 0) {
+                    send.setMode(ActionProcessButton.Mode.PROGRESS);
+                    send.setProgress(0);
                     Toast.makeText(getContext(), R.string.choose_event_location, Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -115,10 +105,13 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
                     View view = error.getView();
                     String message = error.getCollatedErrorMessage(getContext());
 
-
                     if (view instanceof EditText) {
                         ((EditText) view).setError(message);
+                        send.setMode(ActionProcessButton.Mode.PROGRESS);
+                        send.setProgress(0);
                     } else {
+                        send.setMode(ActionProcessButton.Mode.PROGRESS);
+                        send.setProgress(0);
                         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -139,13 +132,23 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
         MapsInitializer.initialize(getContext());
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap = googleMap;
-
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(52.41177549551888, 19.17423415929079), (float) 5.3173866));
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -156,8 +159,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
             } else {
                 checkLocationPermission();
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
@@ -179,115 +181,15 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         });
     }
 
-
-    private void CreateNewCommentRequest(String title, final String author, String desc, double lat, double lng) {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
-
-        final ListItem listItem = new ListItem();
-
-        listItem.setEvent_title(title);
-        listItem.setEvent_author(author);
-        listItem.setEvent_desc(desc);
-        listItem.setEvent_lat(lat);
-        listItem.setEvent_lng(lng);
-
-        Call<ListItem> call = service.sendComment(listItem);
-
-        call.enqueue(new Callback<ListItem>() {
-            @Override
-            public void onResponse(Call<ListItem> call, Response<ListItem> response) {
-                Toast.makeText(getContext(), getString(R.string.sent), Toast.LENGTH_LONG).show();
-                titleEditText.getText().clear();
-                authorEditText.getText().clear();
-                descEditText.getText().clear();
-            }
-
-            @Override
-            public void onFailure(Call<ListItem> call, Throwable t) {
-                Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
     @Override
-    public void onClick(View view) {
-        validator.validate();
-    }
+    public void onLocationChanged(Location location) {
 
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION );
-                            }
-                        })
-                        .create()
-                        .show();
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION );
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(getActivity(),
-                            android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-                        mGoogleMap.setMyLocationEnabled(true);
-                    }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(getActivity(), "permission denied", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
 
@@ -315,15 +217,105 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Location Permission Needed")
+                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        mGoogleMap.setMyLocationEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "permission denied", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+
+    private void CreateNewCommentRequest(String title, final String author, String desc, double lat, double lng) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
+
+        final ListItem listItem = new ListItem();
+
+        listItem.setEvent_title(title);
+        listItem.setEvent_author(author);
+        listItem.setEvent_desc(desc);
+        listItem.setEvent_lat(lat);
+        listItem.setEvent_lng(lng);
+
+        Call<ListItem> call = service.sendComment(listItem);
+
+        call.enqueue(new Callback<ListItem>() {
+            @Override
+            public void onResponse(Call<ListItem> call, Response<ListItem> response) {
+                send.setMode(ActionProcessButton.Mode.PROGRESS);
+                send.setProgress(100);
+                titleEditText.getText().clear();
+                authorEditText.getText().clear();
+                descEditText.getText().clear();
+            }
+
+            @Override
+            public void onFailure(Call<ListItem> call, Throwable t) {
+                send.setMode(ActionProcessButton.Mode.PROGRESS);
+                send.setProgress(-1);
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        send.setMode(ActionProcessButton.Mode.ENDLESS);
+        send.setProgress(1);
+        validator.validate();
     }
 }

@@ -31,12 +31,4 @@
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/join"
-        android:id="@+id/join_event"
-        android:onClick="onJoinClick"
-        android:layout_gravity="center"/>
-
 </LinearLayout>

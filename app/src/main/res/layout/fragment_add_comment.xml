@@ -2,20 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:layout_margin="8dp"
     tools:context="com.nowakowski.krzysztof95.navigationdrawerapp.AddCommentFragment">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/titleEditText"
+        android:lines="1"
+        android:inputType="textCapSentences"
         android:hint="@string/title"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/authorEditText"
+        android:lines="1"
+        android:inputType="textCapSentences"
         android:hint="@string/author"/>
 
     <EditText
@@ -23,6 +28,7 @@
         android:layout_height="wrap_content"
         android:lines="2"
         android:id="@+id/descEditText"
+        android:inputType="textCapSentences"
         android:hint="@string/event_desc"/>
 
 
@@ -32,10 +38,22 @@
         android:layout_weight="1"
         android:id="@+id/map1"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+
+    <com.dd.processbutton.iml.ActionProcessButton
         android:id="@+id/sendButton"
-        android:layout_gravity="center"
-        android:text="@string/send"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/send"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        custom:pb_colorComplete="@color/green_complete"
+        custom:pb_colorNormal="@color/blue_normal"
+        custom:pb_colorPressed="@color/blue_pressed"
+        custom:pb_colorProgress="@color/purple_progress"
+        custom:pb_textComplete="Wysłano"
+        custom:pb_textProgress="Czekaj..."
+        custom:pb_textError="Błąd"
+        custom:pb_colorError="@color/red_error" />
 </LinearLayout>

@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CommentDetails extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String url = "http://192.168.1.117:8888";
+    private static final String url = "http://192.168.0.73:8888";
     private GoogleMap mMap;
     double lat;
     double lng;
@@ -73,7 +73,7 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
-    private void DeleteCommentRequest(int id) {
+    private void DeleteCommentRequest(String event_id) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -83,7 +83,7 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
 
         final ListItem listItem = new ListItem();
 
-        listItem.setEvent_id(id);
+        listItem.setEvent_id(event_id);
 
         Call<ListItem> call = service.DeleteComment(listItem);
 
@@ -104,8 +104,8 @@ public class CommentDetails extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void onDeleteCommentClick(View view) {
-        int id = getIntent().getIntExtra("id", 0);
-        DeleteCommentRequest(id);
+        String event_id = getIntent().getStringExtra("id");
+        DeleteCommentRequest(event_id);
     }
 
     @Override
