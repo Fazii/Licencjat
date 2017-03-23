@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_comment_layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="8dp"
-    tools:context="com.nowakowski.krzysztof95.navigationdrawerapp.AddCommentFragment">
+    tools:context="com.nowakowski.krzysztof95.navigationdrawerapp.AddEventFragment">
 
     <EditText
         android:layout_width="match_parent"
@@ -15,13 +16,6 @@
         android:inputType="textCapSentences"
         android:hint="@string/title"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/authorEditText"
-        android:lines="1"
-        android:inputType="textCapSentences"
-        android:hint="@string/author"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -30,6 +24,13 @@
         android:id="@+id/descEditText"
         android:inputType="textCapSentences"
         android:hint="@string/event_desc"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Ustal datę wydarzenia"
+        android:id="@+id/date_pick_button"/>
 
 
     <com.google.android.gms.maps.MapView
@@ -56,4 +57,6 @@
         custom:pb_textProgress="Czekaj..."
         custom:pb_textError="Błąd"
         custom:pb_colorError="@color/red_error" />
+
+
 </LinearLayout>

@@ -27,7 +27,7 @@ import com.facebook.FacebookSdk;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ShowCommentsFragment showCommentsFragment;
+    ShowEventsFragment showEventsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navUsername.setText(prefs.getString("user", ""));
         navigationView.setNavigationItemSelectedListener(this);
 
-        showCommentsFragment = new ShowCommentsFragment();
+        showEventsFragment = new ShowEventsFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowEvents");
+        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showEventsFragment, "ShowEvents");
         fragmentTransaction.commit();
     }
 
@@ -108,15 +108,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_camera) {
             setTitle(getString(R.string.show_events));
-            ShowCommentsFragment showCommentsFragment = new ShowCommentsFragment();
+            ShowEventsFragment showEventsFragment = new ShowEventsFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showCommentsFragment, "ShowEvents");
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, showEventsFragment, "ShowEvents");
             fragmentTransaction.commit();
         } else if (id == R.id.nav_gallery) {
             setTitle(getString(R.string.add_event));
-            AddCommentFragment addCommentFragment = new AddCommentFragment();
+            AddEventFragment addEventFragment = new AddEventFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, addCommentFragment, "AddEvent");
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, addEventFragment, "AddEvent");
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_manage) {
             setTitle(getString(R.string.your_events));
-            YourEventsFragment yourEventsFragment = new YourEventsFragment();
+            PagerFragment pagerFragment = new PagerFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, yourEventsFragment, "ShowYourEvents");
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, pagerFragment, "ShowYourEvents");
             fragmentTransaction.commit();
         } else if (id == R.id.nav_share) {
             Intent i = new Intent(MainActivity.this, FacebookLoginActivity.class);

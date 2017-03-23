@@ -1,7 +1,12 @@
 package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -15,7 +20,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -31,11 +40,17 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.internal.bind.SqlDateTypeAdapter;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
+import android.text.format.DateFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,11 +58,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class AddCommentFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+public class AddEventFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String url = "http://192.168.0.73:8888";
+    public static final String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
     GoogleMap mGoogleMap;
@@ -56,21 +74,25 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     ActionProcessButton send;
+    Button date;
+    String dateTime;
+    FrameLayout unlogedView;
 
     double lat;
     double lng;
 
+    int year, month, day, hour, minute;
+    int yearF, monthF, dayF, hourF, minuteF;
+
     @NotEmpty(message = "To pole jest wymagane")
     private EditText titleEditText;
-    @NotEmpty(message = "To pole jest wymagane")
-    private EditText authorEditText;
     @NotEmpty(message = "To pole jest wymagane")
     private EditText descEditText;
 
     Validator validator = new Validator(this);
 
 
-    public AddCommentFragment() {
+    public AddEventFragment() {
         // Required empty public constructor
     }
 
@@ -78,14 +100,40 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        v = inflater.inflate(R.layout.fragment_add_comment, container, false);
+        v = inflater.inflate(R.layout.fragment_add_event, container, false);
+
+        final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
         titleEditText = (EditText) v.findViewById(R.id.titleEditText);
-        authorEditText = (EditText) v.findViewById(R.id.authorEditText);
         descEditText = (EditText) v.findViewById(R.id.descEditText);
 
         send = (ActionProcessButton) v.findViewById(R.id.sendButton);
         send.setOnClickListener(this);
+
+        date = (Button) v.findViewById(R.id.date_pick_button);
+        date.setOnClickListener(this);
+
+
+        if(prefs.getString("user_id", "") == ""){
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Zaloguj się")
+                    .setMessage("Aby dodawać wydarzenia musisz być zalogowany")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(getActivity(), FacebookLoginActivity.class);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            titleEditText.setFocusable(false);
+                            descEditText.setFocusable(false);
+                            send.setEnabled(false);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
 
         validator.setValidationListener(new Validator.ValidationListener() {
             @Override
@@ -95,8 +143,13 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
                     send.setProgress(0);
                     Toast.makeText(getContext(), R.string.choose_event_location, Toast.LENGTH_LONG).show();
                     return;
+                } else if (dateTime == null){
+                        send.setMode(ActionProcessButton.Mode.PROGRESS);
+                        send.setProgress(0);
+                        Toast.makeText(getContext(), R.string.choose_event_date, Toast.LENGTH_LONG).show();
+                        return;
                 }
-                CreateNewCommentRequest(titleEditText.getText().toString(), authorEditText.getText().toString(), descEditText.getText().toString(), lat, lng);
+                CreateNewCommentRequest(titleEditText.getText().toString(),prefs.getString("user_id", ""), prefs.getString("user", ""), descEditText.getText().toString(), lat, lng, dateTime);
             }
 
             @Override
@@ -275,7 +328,7 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
     }
 
 
-    private void CreateNewCommentRequest(String title, final String author, String desc, double lat, double lng) {
+    private void CreateNewCommentRequest(String title, String user_id, final String author, String desc, double lat, double lng, String dateTime) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -287,10 +340,12 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
         final ListItem listItem = new ListItem();
 
         listItem.setEvent_title(title);
+        listItem.setUser_id(user_id);
         listItem.setEvent_author(author);
         listItem.setEvent_desc(desc);
         listItem.setEvent_lat(lat);
         listItem.setEvent_lng(lng);
+        listItem.setEvent_start_time(dateTime);
 
         Call<ListItem> call = service.sendComment(listItem);
 
@@ -300,7 +355,6 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
                 send.setMode(ActionProcessButton.Mode.PROGRESS);
                 send.setProgress(100);
                 titleEditText.getText().clear();
-                authorEditText.getText().clear();
                 descEditText.getText().clear();
             }
 
@@ -314,8 +368,52 @@ public class AddCommentFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        send.setMode(ActionProcessButton.Mode.ENDLESS);
-        send.setProgress(1);
-        validator.validate();
+
+        switch(view.getId())
+        {
+            case R.id.sendButton :
+                send.setMode(ActionProcessButton.Mode.ENDLESS);
+                send.setProgress(1);
+                validator.validate();
+                break;
+            case R.id.date_pick_button :
+                Calendar calendar = Calendar.getInstance();
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), AddEventFragment.this,
+                        year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + 604800000);
+                datePickerDialog.show();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        yearF = i;
+        monthF = i1 + 1;
+        dayF = i2;
+
+        Calendar calendar = Calendar.getInstance();
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), AddEventFragment.this,
+                hour, minute, DateFormat.is24HourFormat(getApplicationContext()));
+
+        timePickerDialog.show();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+        hourF = i;
+        minuteF = i1;
+
+
+        dateTime = (yearF + "-" + monthF + "-" + dayF + " " + hourF + ":" + minuteF + ":00");
     }
 }

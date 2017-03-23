@@ -8,6 +8,7 @@ public class ListItem {
     private String event_title;
     private String event_author;
     private String event_time;
+    private String event_start_time;
     private String event_desc;
     private double event_lat;
     private double event_lng;
@@ -50,6 +51,14 @@ public class ListItem {
 
     public void setEvent_time(String event_date) {
         this.event_time = event_time;
+    }
+
+    public String getEvent_start_time() {
+        return event_start_time;
+    }
+
+    public void setEvent_start_time(String event_start_time) {
+        this.event_start_time = event_start_time;
     }
 
     public String getEvent_desc() {

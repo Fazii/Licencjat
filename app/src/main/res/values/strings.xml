@@ -27,10 +27,13 @@
     <string name="time">Data wydarzenia</string>
     <string name="Success">Wysłano</string>
     <string name="Loading">Czekaj...</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">Login</string>
     <string name="password">Hasło</string>
     <string name="your_events">Twoje wydarzenia</string>
+    <string name="login_to_add_events">Zaloguj się aby móc dodawać wydarzenia</string>
+    <string name="Unsubscribe">Wypisz się</string>
+    <string name="event_unsubscribed">Wypisano z wydarzenia</string>
+    <string name="choose_event_date">Wybierz datę wydarzenia</string>
+
 </resources>

@@ -26,10 +26,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
-public class YourEventsFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MyEventsFragment extends Fragment {
+
 
     private final String url = "http://192.168.0.73:8888";
-
+    private static final String KEY_POSITION="position";
+    private static final String MY_EVENTS_CLASS="myevents";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -38,8 +43,21 @@ public class YourEventsFragment extends Fragment {
     private List<ListItem> responseItems;
     View v;
 
-    public YourEventsFragment() {
+    public MyEventsFragment() {
         // Required empty public constructor
+    }
+
+    static MyEventsFragment newInstance(int position) {
+        MyEventsFragment frag=new MyEventsFragment();
+        Bundle args=new Bundle();
+
+        args.putInt(KEY_POSITION, position);
+        frag.setArguments(args);
+
+        return(frag);
+    }
+    static String getTitle(Context ctxt, int position) {
+        return("Wydarzenia, które utworzyłeś");
     }
 
 
@@ -47,20 +65,19 @@ public class YourEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_your_events, container, false);
+        v = inflater.inflate(R.layout.fragment_my_events, container, false);
         final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayoutYourEvents);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayoutMyEvents);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadRecycleViewData(prefs.getString("user_id", ""));
             }
         });
-        emptyView = (FrameLayout) v.findViewById(R.id.empty_view_your_events);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycleViewYourEvents);
+        emptyView = (FrameLayout) v.findViewById(R.id.empty_view_my_events);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycleViewMyEvents);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
         responseItems = new ArrayList<>();
         loadRecycleViewData(prefs.getString("user_id", ""));
@@ -69,7 +86,7 @@ public class YourEventsFragment extends Fragment {
     }
 
 
-    private void loadRecycleViewData(String user_id) {
+    protected void loadRecycleViewData(String user_id) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.Loading_data));
         progressDialog.show();
@@ -95,7 +112,7 @@ public class YourEventsFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 responseItems = response.body();
 
-                adapter = new MyAdapter(responseItems, getContext());
+                adapter = new MyAdapter(responseItems, getContext(), MY_EVENTS_CLASS);
 
                 if (adapter.getItemCount() == 0) {
                     recyclerView.setVisibility(View.GONE);
@@ -115,4 +132,5 @@ public class YourEventsFragment extends Fragment {
             }
         });
     }
+
 }

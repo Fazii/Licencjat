@@ -1,5 +1,5 @@
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refreshLayoutYourEvents"
+    android:id="@+id/refreshLayoutJoinedEvents"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,7 +8,7 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycleViewYourEvents"
+            android:id="@+id/recycleViewJoinedEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical">
@@ -16,7 +16,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <FrameLayout
-            android:id="@+id/empty_view_your_events"
+            android:id="@+id/empty_view_joined_events"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">

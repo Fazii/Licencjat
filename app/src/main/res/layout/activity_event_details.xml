@@ -6,7 +6,7 @@
     android:padding="@dimen/activity_horizontal_margin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CommentDetails"
+    tools:context=".EventDetailsActivity"
     android:gravity="center_horizontal"
     android:background="@color/cardview_light_background"
     android:name="com.google.android.gms.maps.SupportMapFragment">
@@ -39,11 +39,33 @@
         android:layout_height="wrap_content"
         android:padding="5dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
+
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:text="@string/delete"
-        android:onClick="onDeleteCommentClick"/>
+        android:orientation="horizontal"
+        android:layout_width="wrap_content">
+        <Button
+            android:id="@+id/join_event_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/join"
+            android:onClick="onJoinEventClick"/>
+
+        <Button
+            android:id="@+id/delete_event_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:onClick="onDeleteEventClick"/>
+
+        <Button
+            android:id="@+id/unsubscribe_event_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Unsubscribe"
+            android:onClick="onUnsubscribeEventClick"/>
+
+    </LinearLayout>
 
     <fragment
         android:id="@+id/map2"

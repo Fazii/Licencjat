@@ -19,10 +19,12 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private static final int DELETE_COMMENT_REQUEST = 1;
     private List<ListItem> listItems = new ArrayList<>();
     private Context context;
+    private String className;
 
-    MyAdapter(List<ListItem> listItems, Context context) {
+    MyAdapter(List<ListItem> listItems, Context context, String className) {
         this.listItems = listItems;
         this.context = context;
+        this.className = className;
     }
 
     @Override
@@ -44,14 +46,18 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, CommentDetails.class);
+                Intent intent = new Intent(context, EventDetailsActivity.class);
                 intent.putExtra("id", listItem.getEvent_id());
+                intent.putExtra("user_id", listItem.getUser_id());
                 intent.putExtra("title", listItem.getEvent_title());
                 intent.putExtra("author", listItem.getEvent_author());
                 intent.putExtra("desc", listItem.getEvent_desc());
                 intent.putExtra("time", listItem.getEvent_time());
                 intent.putExtra("lat", listItem.getEvent_lat());
                 intent.putExtra("lng", listItem.getEvent_lng());
+                intent.putExtra("class_name", className);
+
+
 
                 ((Activity) context).startActivityForResult(intent, DELETE_COMMENT_REQUEST);
             }

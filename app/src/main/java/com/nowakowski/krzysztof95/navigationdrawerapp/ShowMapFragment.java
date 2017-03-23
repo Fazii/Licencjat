@@ -1,11 +1,13 @@
 package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -104,13 +106,10 @@ public class ShowMapFragment extends Fragment implements
         if (prefs.getString("user_id", "") == "") {
             join.setVisibility(View.GONE);
         }
-
         slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.swipe_up);
         slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swipe_down);
 
         listItems = new ArrayList<>();
-
-        loadEventsMarkers();
 
         return v;
     }
@@ -132,6 +131,8 @@ public class ShowMapFragment extends Fragment implements
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap = googleMap;
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.41177549551888, 19.17423415929079), (float) 5.3173866));
+        loadEventsMarkers();
+
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -221,13 +222,6 @@ public class ShowMapFragment extends Fragment implements
 
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
 
-        for (int i = 0; i < listItems.size(); i++) {
-
-            MarkerOptions marker = new MarkerOptions().position(
-                    new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(listItems.get(i).getEvent_id());
-            mGoogleMap.addMarker(marker);
-            markerData.put(marker.getTitle(), listItems.get(i));
-        }
 
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -292,6 +286,9 @@ public class ShowMapFragment extends Fragment implements
     }
 
     private void loadEventsMarkers() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getString(R.string.Loading_data));
+        progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -305,8 +302,17 @@ public class ShowMapFragment extends Fragment implements
             @Override
             public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {
                 try {
+                    progressDialog.dismiss();
                     listItems.clear();
                     listItems = response.body();
+
+                    for (int i = 0; i < listItems.size(); i++) {
+
+                        MarkerOptions marker = new MarkerOptions().position(
+                                new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(listItems.get(i).getEvent_id());
+                        mGoogleMap.addMarker(marker);
+                        markerData.put(marker.getTitle(), listItems.get(i));
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -315,6 +321,7 @@ public class ShowMapFragment extends Fragment implements
 
             @Override
             public void onFailure(Call<List<ListItem>> call, Throwable t) {
+                progressDialog.dismiss();
             }
         });
     }
@@ -354,8 +361,6 @@ public class ShowMapFragment extends Fragment implements
     public void onClick(View view) {
         join.setMode(ActionProcessButton.Mode.ENDLESS);
         join.setProgress(1);
-        JoinEventRequest(MarkerId, prefs.getString("user_id", ""));
-
+        JoinEventRequest(prefs.getString("user_id", ""), MarkerId);
     }
-
 }
