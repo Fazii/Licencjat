@@ -32,7 +32,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class MyEventsFragment extends Fragment {
 
 
-    private final String url = "http://192.168.0.73:8888";
+    private final String url = "http://52.174.235.185";
     private static final String KEY_POSITION="position";
     private static final String MY_EVENTS_CLASS="myevents";
 

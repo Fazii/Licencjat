@@ -1,74 +1,115 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.nowakowski.krzysztof95.navigationdrawerapp.ShowMapFragment">
 
     <com.google.android.gms.maps.MapView
+        android:id="@+id/ShowEventsMap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/ShowEventsMap"/>
-
+        android:layout_height="match_parent" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:gravity="center"
+        android:id="@+id/infoEventLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="@color/cardview_light_background"
-        android:orientation="vertical"
-        android:id="@+id/infoEventLayout"
         android:layout_centerHorizontal="true"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="invisible">
 
-        <TextView
-            android:id="@+id/m_textViewTitle"
-            android:text="Title"
-            android:lines="1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"/>
+            android:background="@color/lightBlue"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/m_textViewAuthor"
-            android:text="Author"
-            android:lines="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"/>
 
-        <TextView
-            android:id="@+id/m_textViewDesc"
-            android:text="Description"
-            android:lines="3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"/>
-        <TextView
-            android:id="@+id/m_textViewTime"
-            android:text="Time"
-            android:lines="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"/>
+            <ImageView
+                android:id="@+id/m_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Avatar" />
 
-        <com.dd.processbutton.iml.ActionProcessButton
-            android:id="@+id/join_event"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:id="@+id/m_textViewAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/m_textViewTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date" />
+
+                <com.dd.processbutton.iml.ActionProcessButton
+                    android:id="@+id/join_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/join"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    custom:pb_colorComplete="@color/green_complete"
+                    custom:pb_colorNormal="@color/blue_normal"
+                    custom:pb_colorPressed="@color/blue_pressed"
+                    custom:pb_colorProgress="@color/purple_progress"
+                    custom:pb_textComplete="Dołączono"
+                    custom:pb_textProgress="Czekaj..."
+                    custom:pb_textError="Błąd"
+                    custom:pb_colorError="@color/red_error"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="-36dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/join"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            custom:pb_colorComplete="@color/green_complete"
-            custom:pb_colorNormal="@color/blue_normal"
-            custom:pb_colorPressed="@color/blue_pressed"
-            custom:pb_colorProgress="@color/purple_progress"
-            custom:pb_textComplete="Dołączono"
-            custom:pb_textProgress="Czekaj..."
-            custom:pb_textError="Błąd"
-            custom:pb_colorError="@color/red_error" />
+            android:background="@color/lightPurple"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="1dp">
+
+            <TextView
+                android:id="@+id/m_textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/title"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+            <TextView
+                android:id="@+id/m_textViewDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/event_desc" />
+
+            <TextView
+                android:id="@+id/m_textViewStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/time"
+                android:layout_gravity="end"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

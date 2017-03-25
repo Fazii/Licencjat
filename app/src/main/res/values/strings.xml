@@ -35,5 +35,6 @@
     <string name="Unsubscribe">Wypisz się</string>
     <string name="event_unsubscribed">Wypisano z wydarzenia</string>
     <string name="choose_event_date">Wybierz datę wydarzenia</string>
+    <string name="my_events">Moje wydarzenia</string>
 
 </resources>

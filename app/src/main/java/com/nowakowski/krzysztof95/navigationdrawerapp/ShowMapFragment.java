@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +54,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
+import com.nowakowski.krzysztof95.navigationdrawerapp.transform.DateTransform;
+
 
 public class ShowMapFragment extends Fragment implements
         OnMapReadyCallback,
@@ -58,7 +63,8 @@ public class ShowMapFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, View.OnClickListener {
 
-    private final String url = "http://192.168.0.73:8888";
+    private final String url = "http://52.174.235.185";
+
 
     GoogleMap mGoogleMap;
     MapView mMapView;
@@ -97,7 +103,6 @@ public class ShowMapFragment extends Fragment implements
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_show_map, container, false);
         info = v.findViewById(R.id.infoEventLayout);
-
         prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
         join = (ActionProcessButton) v.findViewById(R.id.join_event);
@@ -105,6 +110,7 @@ public class ShowMapFragment extends Fragment implements
 
         if (prefs.getString("user_id", "") == "") {
             join.setVisibility(View.GONE);
+            join.setClickable(false);
         }
         slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.swipe_up);
         slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swipe_down);
@@ -160,15 +166,25 @@ public class ShowMapFragment extends Fragment implements
                 ListItem listItem = markerData.get(MarkerId);
 
 
+                DateTransform dateTransform = new DateTransform();
+
+
+                ImageView imageViewAvatar = (ImageView) v.findViewById(R.id.m_imageView);
                 TextView title = (TextView) info.findViewById(R.id.m_textViewTitle);
                 TextView author = (TextView) info.findViewById(R.id.m_textViewAuthor);
                 TextView desc = (TextView) info.findViewById(R.id.m_textViewDesc);
                 TextView time = (TextView) info.findViewById(R.id.m_textViewTime);
+                TextView start_time = (TextView) info.findViewById(R.id.m_textViewStartTime) ;
 
-                title.setText(String.format("Tytuł: %s", listItem.getEvent_title()));
-                author.setText(String.format("Autor: %s", listItem.getEvent_author()));
-                desc.setText(String.format("Opis: %s ", listItem.getEvent_desc()));
-                time.setText(String.format("Data dodania: %s", listItem.getEvent_time()));
+                title.setText(listItem.getEvent_title());
+                author.setText(listItem.getEvent_author());
+                desc.setText(listItem.getEvent_desc());
+                time.setText(dateTransform.countDownToDate(listItem.getEvent_time()));
+                start_time.setText(dateTransform.countDownToEvent(listItem.getEvent_start_time()));
+
+                Picasso.with(getApplicationContext())
+                        .load(listItem.getUser_avatar()).placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder).resize(100, 100).into(imageViewAvatar);
 
 
                 if (info.getVisibility() == View.INVISIBLE) {

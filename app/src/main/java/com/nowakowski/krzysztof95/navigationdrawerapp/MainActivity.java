@@ -20,9 +20,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
+import com.nowakowski.krzysztof95.navigationdrawerapp.transform.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,8 +68,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+
         TextView navUsername = (TextView) headerView.findViewById(R.id.name_nav_header);
-        navUsername.setText(prefs.getString("user", ""));
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
+
+        Picasso.with(getApplicationContext())
+                .load(prefs.getString("user_picture","https://static-hive-images-ticketlabsinc1.netdna-ssl.com/upload/c_fill,g_faces,h_150,w_150/placeholder-man_vqukjf.jpg")).transform(new CircleTransform()).into(imageView);
+
+        navUsername.setText(prefs.getString("user", "MeetWithMe"));
         navigationView.setNavigationItemSelectedListener(this);
 
         showEventsFragment = new ShowEventsFragment();
@@ -120,18 +129,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
+            setTitle(getString(R.string.my_events));
+            PagerFragment pagerFragment = new PagerFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.relativelayout_for_fragment, pagerFragment, "ShowYourEvents");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_manage) {
             setTitle(getString(R.string.show_EventsMap));
             ShowMapFragment showMapFragment = new ShowMapFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.relativelayout_for_fragment, showMapFragment, "ShowMap");
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_manage) {
-            setTitle(getString(R.string.your_events));
-            PagerFragment pagerFragment = new PagerFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.relativelayout_for_fragment, pagerFragment, "ShowYourEvents");
-            fragmentTransaction.commit();
         } else if (id == R.id.nav_share) {
             Intent i = new Intent(MainActivity.this, FacebookLoginActivity.class);
             startActivity(i);

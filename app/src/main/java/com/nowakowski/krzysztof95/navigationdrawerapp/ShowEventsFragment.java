@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowEventsFragment extends Fragment {
 
-    private static final String url = "http://192.168.0.73:8888";
+    private static final String url = "http://52.174.235.185";
     private static final String SHOW_EVENTS_CLASS = "showEvents";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;

@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -22,7 +23,6 @@ import java.util.Arrays;
 public class FacebookLoginActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-    TextView textView;
     CallbackManager callbackManager;
     ProfileTracker profileTracker;
     SharedPreferences prefs;
@@ -35,8 +35,12 @@ public class FacebookLoginActivity extends AppCompatActivity {
 
         prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        textView = (TextView) findViewById(R.id.status_textView);
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.setReadPermissions(Arrays.asList(
@@ -75,6 +79,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                 if (currentProfile != null) {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("user", currentProfile.getName());
+                    editor.putString("user_picture",currentProfile.getProfilePictureUri(150, 150).toString());
                     editor.putBoolean("valid", true);
 
                     editor.apply();
@@ -82,6 +87,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.remove("user_id");
                     editor.remove("user");
+                    editor.remove("user_picture");
                     editor.apply();
                     Intent refActivity = new Intent(FacebookLoginActivity.this, MainActivity.class);
                     startActivity(refActivity);
@@ -96,6 +102,16 @@ public class FacebookLoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
     }
 
     @Override

@@ -25,6 +25,24 @@
         android:inputType="textCapSentences"
         android:hint="@string/event_desc"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:hint="Wyszukaj lokalizację"
+            android:id="@+id/address_edit_text"
+            android:lines="1"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_address_button"
+            android:text="Szukaj"/>
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

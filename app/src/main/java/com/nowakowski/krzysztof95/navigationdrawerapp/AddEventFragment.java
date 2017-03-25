@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,17 +42,16 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.internal.bind.SqlDateTypeAdapter;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import android.text.format.DateFormat;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,7 +65,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class AddEventFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private static final String url = "http://192.168.0.73:8888";
+    private static final String url = "http://52.174.235.185";
     public static final String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
@@ -113,6 +114,9 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         date = (Button) v.findViewById(R.id.date_pick_button);
         date.setOnClickListener(this);
 
+        Button search = (Button) v.findViewById(R.id.search_address_button);
+        search.setOnClickListener(this);
+
 
         if(prefs.getString("user_id", "") == ""){
             new AlertDialog.Builder(getContext())
@@ -149,7 +153,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                         Toast.makeText(getContext(), R.string.choose_event_date, Toast.LENGTH_LONG).show();
                         return;
                 }
-                CreateNewCommentRequest(titleEditText.getText().toString(),prefs.getString("user_id", ""), prefs.getString("user", ""), descEditText.getText().toString(), lat, lng, dateTime);
+                CreateNewCommentRequest(titleEditText.getText().toString(),prefs.getString("user_id", ""), prefs.getString("user_picture", ""), prefs.getString("user", ""),  descEditText.getText().toString(), lat, lng, dateTime);
             }
 
             @Override
@@ -194,6 +198,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         mGoogleApiClient.connect();
     }
 
+
     @Override
     public void onMapReady(final GoogleMap googleMap) {
 
@@ -232,6 +237,43 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 lng = point.longitude;
             }
         });
+    }
+
+    public void onSearch(){
+        EditText location_et = (EditText) v.findViewById(R.id.address_edit_text);
+        String location = location_et.getText().toString();
+
+        List<Address> addressList;
+
+        if(!location.matches("")){
+
+            Geocoder geocoder = new Geocoder(getApplicationContext());
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
+
+                if (addressList.size() != 0) {
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    lat = address.getLatitude();
+                    lng = address.getLongitude();
+                    mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                } else {
+                    Toast.makeText(getContext(), "Nie znaleziono podanego adresu", Toast.LENGTH_LONG).show();
+                }
+
+            } catch (IOException e) {
+                Toast.makeText(getContext(), "Nie znaleziono podanego adresu", Toast.LENGTH_LONG).show();
+            }
+
+
+
+
+        }
+
+        else {
+            Toast.makeText(getContext(), "Podaj lokalizację", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -327,8 +369,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-
-    private void CreateNewCommentRequest(String title, String user_id, final String author, String desc, double lat, double lng, String dateTime) {
+    private void CreateNewCommentRequest(String title, String user_id, String user_picture, final String author, String desc, double lat, double lng, String dateTime) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -341,6 +382,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
 
         listItem.setEvent_title(title);
         listItem.setUser_id(user_id);
+        listItem.setUser_avatar(user_picture);
         listItem.setEvent_author(author);
         listItem.setEvent_desc(desc);
         listItem.setEvent_lat(lat);
@@ -376,19 +418,23 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 send.setProgress(1);
                 validator.validate();
                 break;
+
             case R.id.date_pick_button :
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
                 month = calendar.get(Calendar.MONTH);
                 day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), AddEventFragment.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), R.style.DialogTheme, AddEventFragment.this,
                         year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + 604800000);
                 datePickerDialog.show();
                 break;
 
+            case R.id.search_address_button :
+                onSearch();
+                break;
         }
     }
 
@@ -402,7 +448,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), AddEventFragment.this,
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), R.style.DialogTheme, AddEventFragment.this,
                 hour, minute, DateFormat.is24HourFormat(getApplicationContext()));
 
         timePickerDialog.show();

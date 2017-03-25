@@ -8,18 +8,16 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +25,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nowakowski.krzysztof95.navigationdrawerapp.transform.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -36,11 +36,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class EventDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String url = "http://192.168.0.73:8888";
+    private static final String url = "http://52.174.235.185";
     private static final String JOINED_EVENT_CLASS="joined";
     private GoogleMap mMap;
     double lat;
@@ -68,6 +67,12 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
         Button deleteEvent = (Button) findViewById(R.id.delete_event_button);
         unsubscribeEvent = (Button) findViewById(R.id.unsubscribe_event_button);
+        Button join = (Button) findViewById(R.id.join_event_button);
+
+        if (Objects.equals(prefs.getString("user_id", ""), "")) {
+            join.setVisibility(View.GONE);
+            join.setClickable(false);
+        }
 
         if(!Objects.equals(getIntent().getStringExtra("class_name"), JOINED_EVENT_CLASS))
         {
@@ -84,13 +89,20 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         TextView textViewAuthor = (TextView) findViewById(R.id.d_textViewAuthor);
         TextView textViewDesc = (TextView) findViewById(R.id.d_textViewDesc);
         TextView textViewTime = (TextView) findViewById(R.id.d_textViewTime);
+        TextView textViewStartTime = (TextView) findViewById(R.id.d_textViewStartTime);
+        ImageView imageVievAvatar = (ImageView) findViewById(R.id.d_imageView);
         lat = getIntent().getDoubleExtra("lat", 0);
         lng = getIntent().getDoubleExtra("lng", 0);
 
-        textViewTitle.setText(String.format("Tytuł: %s", getIntent().getStringExtra("title")));
-        textViewAuthor.setText(String.format("Autor: %s", getIntent().getStringExtra("author")));
-        textViewDesc.setText(String.format("Opis: %s", getIntent().getStringExtra("desc")));
-        textViewTime.setText(String.format("Data dodania: %s", getIntent().getStringExtra("time")));
+        textViewTitle.setText(getIntent().getStringExtra("title"));
+        textViewAuthor.setText(getIntent().getStringExtra("author"));
+        textViewDesc.setText(getIntent().getStringExtra("desc"));
+        textViewTime.setText(getIntent().getStringExtra("time"));
+        textViewStartTime.setText(String.format("Data rozpoczęcia: %s", getIntent().getStringExtra("start_time")));
+
+        Picasso.with(getApplicationContext())
+                .load(getIntent().getStringExtra("user_avatar")).placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_placeholder).resize(100, 100).transform(new CircleTransform()).into(imageVievAvatar);
     }
 
     @Override

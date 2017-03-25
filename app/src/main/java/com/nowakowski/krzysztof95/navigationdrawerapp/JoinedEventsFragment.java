@@ -28,7 +28,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class JoinedEventsFragment extends Fragment {
 
-    private final String url = "http://192.168.0.73:8888";
+    private final String url = "http://52.174.235.185";
     private static final String KEY_POSITION="position";
     private static final String JOINED_EVENT_CLASS="joined";
 

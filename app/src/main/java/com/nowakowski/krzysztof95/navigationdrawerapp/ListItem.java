@@ -4,6 +4,7 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 public class ListItem {
 
     private String user_id;
+    private String user_avatar;
     private String event_id;
     private String event_title;
     private String event_author;
@@ -19,6 +20,14 @@ public class ListItem {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUser_avatar() {
+        return user_avatar;
+    }
+
+    public void setUser_avatar(String user_avatar) {
+        this.user_avatar = user_avatar;
     }
 
     public String getEvent_id() {
