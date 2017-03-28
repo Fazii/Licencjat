@@ -111,4 +111,13 @@
             android:text="@string/Unsubscribe" />
 
     </LinearLayout>
+    <Button
+        android:id="@+id/show_who_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onShowWhoJoinEventClick"
+        android:text="Zobacz kto dołączył"
+        android:layout_gravity="center_horizontal"/>
+
+
 </LinearLayout>

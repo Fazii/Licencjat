@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navUsername.setText(prefs.getString("user", "MeetWithMe"));
         navigationView.setNavigationItemSelectedListener(this);
 
+        setTitle(getString(R.string.show_events));
         showEventsFragment = new ShowEventsFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.relativelayout_for_fragment, showEventsFragment, "ShowEvents");
@@ -145,9 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_share) {
             Intent i = new Intent(MainActivity.this, FacebookLoginActivity.class);
             startActivity(i);
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

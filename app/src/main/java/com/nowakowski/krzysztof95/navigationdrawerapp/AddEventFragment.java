@@ -252,6 +252,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 addressList = geocoder.getFromLocationName(location, 1);
 
                 if (addressList.size() != 0) {
+                    mGoogleMap.clear();
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     lat = address.getLatitude();

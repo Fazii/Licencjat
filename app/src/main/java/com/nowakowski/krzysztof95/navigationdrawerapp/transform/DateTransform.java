@@ -29,7 +29,7 @@ public class DateTransform {
         Period diff = new Period(currnet_date_time, date_time);
 
         int minutes = diff.getMinutes();
-        int hours = diff.getHours() - 1;
+        int hours = diff.getHours();
         int days = diff.getDays();
 
 
@@ -60,22 +60,22 @@ public class DateTransform {
                 if (hours == 0) {
                     if (minutes == -1) {
                         countdown = "Zaczęło się minutę temu";
-                    } else if (minutes >= 2 % 10 && minutes <= 4 % 10) {
+                    } else if (Math.abs(minutes) >= 2 % 10 &&  Math.abs(minutes) <= 4 % 10) {
                         countdown = "Zaczęło się " + Math.abs(minutes) + " minuty temu";
                     } else {
                         countdown = "Zaczęło się " + Math.abs(minutes) + " minut temu";
                     }
                 } else if (hours == -1) {
                     countdown = "Zaczęło się " + Math.abs(hours) + " godzinę temu";
-                } else if (hours % 10 >= 2 && hours % 10 <= 4) {
+                } else if (hours % 10 >= -2 && hours % 10 <= -4) {
                     countdown = "Zaczęło się " + Math.abs(hours) + " godziny temu";
                 } else {
-                    countdown = "Zaczęło się za " + Math.abs(hours) + " godzin temu";
+                    countdown = "Zaczęło się " + Math.abs(hours) + " godzin temu";
                 }
-            } else if (days == 1) {
-                countdown = "Zaczyna się za " + Math.abs(days) + " dzień";
+            } else if (days == -1) {
+                countdown = "Zaczęło się " + Math.abs(days) + " dni temu";
             } else {
-                countdown = "Zaczyna się za " + Math.abs(days) + " dni";
+                countdown = "Zaczęło się " + Math.abs(days) + " dni temu";
             }
         }
 
@@ -101,7 +101,7 @@ public class DateTransform {
         Period diff = new Period(date_time, currnet_date_time);
 
         int minutes = diff.getMinutes();
-        int hours = diff.getHours() - 1;
+        int hours = diff.getHours() - 2;
         int days = diff.getDays();
 
         if(days == 0){

@@ -36,5 +36,6 @@
     <string name="event_unsubscribed">Wypisano z wydarzenia</string>
     <string name="choose_event_date">Wybierz datę wydarzenia</string>
     <string name="my_events">Moje wydarzenia</string>
+    <string name="facebook_login_info">Aby móc dodawać wydarzenia i do nich dołączać konieczne jest zalogowanie się do aplikacji poprzez Twoje konto Facebook. Nie udostepniamy nic na Twoje tablicy.</string>
 
 </resources>

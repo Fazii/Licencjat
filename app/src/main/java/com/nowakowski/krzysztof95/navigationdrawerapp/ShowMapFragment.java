@@ -64,6 +64,8 @@ public class ShowMapFragment extends Fragment implements
         LocationListener, View.OnClickListener {
 
     private final String url = "http://52.174.235.185";
+    private static final float ACHOR_WINDOWS_U = -9999;
+    private static final float ACHOR_WINDOWS_V = -9999;
 
 
     GoogleMap mGoogleMap;
@@ -76,6 +78,7 @@ public class ShowMapFragment extends Fragment implements
     Animation slideUp;
     Animation slideDown;
     List<ListItem> listItems;
+    List<ListItem> listItems1;
     HashMap<String, ListItem> markerData = new HashMap<>();
     String MarkerId;
     SharedPreferences prefs;
@@ -116,7 +119,7 @@ public class ShowMapFragment extends Fragment implements
         slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swipe_down);
 
         listItems = new ArrayList<>();
-
+        listItems1 = new ArrayList<>();
         return v;
     }
 
@@ -158,13 +161,16 @@ public class ShowMapFragment extends Fragment implements
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                marker.hideInfoWindow();
 
+                join.setClickable(true);
                 join.setMode(ActionProcessButton.Mode.PROGRESS);
                 join.setProgress(0);
 
                 MarkerId = marker.getTitle();
                 ListItem listItem = markerData.get(MarkerId);
 
+                IsJoinedEventRequest(marker.getTitle());
 
                 DateTransform dateTransform = new DateTransform();
 
@@ -188,7 +194,6 @@ public class ShowMapFragment extends Fragment implements
 
 
                 if (info.getVisibility() == View.INVISIBLE) {
-
                     info.startAnimation(slideDown);
                     info.setVisibility(View.VISIBLE);
                 }
@@ -326,8 +331,9 @@ public class ShowMapFragment extends Fragment implements
 
                         MarkerOptions marker = new MarkerOptions().position(
                                 new LatLng(listItems.get(i).getEvent_lat(), listItems.get(i).getEvent_lng())).title(listItems.get(i).getEvent_id());
-                        mGoogleMap.addMarker(marker);
+                        Marker marker1 = mGoogleMap.addMarker(marker);
                         markerData.put(marker.getTitle(), listItems.get(i));
+                        marker1.setInfoWindowAnchor(ACHOR_WINDOWS_U, ACHOR_WINDOWS_V);
                     }
 
                 } catch (Exception e) {
@@ -342,7 +348,7 @@ public class ShowMapFragment extends Fragment implements
         });
     }
 
-    private void JoinEventRequest(String user_id, String event_id) {
+    private void JoinEventRequest(String user_id, String user_name, String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -354,6 +360,7 @@ public class ShowMapFragment extends Fragment implements
         final ListItem listItem = new ListItem();
 
         listItem.setUser_id(user_id);
+        listItem.setUser_name(user_name);
         listItem.setEvent_id(event_id);
 
         Call<ListItem> call = service.joinEvent(listItem);
@@ -373,10 +380,51 @@ public class ShowMapFragment extends Fragment implements
         });
     }
 
+    public void IsJoinedEventRequest(String event_id){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
+        ListItem requestItems = new ListItem();
+        requestItems.setEvent_id(event_id);
+
+        Call<List<ListItem>> call = service.whoJoinEvent(requestItems);
+
+        call.enqueue(new Callback<List<ListItem>>() {
+
+            @Override
+            public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {
+
+                try {
+                    listItems1.clear();
+                    listItems1= response.body();
+
+                    for(int i = 0; i< listItems1.size(); i++){
+                        if(listItems1.get(i).getUser_id().equals(prefs.getString("user_id", ""))){
+                            join.setProgress(100);
+                            join.setText("Dołączono");
+                            join.setClickable(false);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListItem>> call, Throwable t) {
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         join.setMode(ActionProcessButton.Mode.ENDLESS);
         join.setProgress(1);
-        JoinEventRequest(prefs.getString("user_id", ""), MarkerId);
+        JoinEventRequest(prefs.getString("user_id", ""), prefs.getString("user", ""), MarkerId);
     }
 }

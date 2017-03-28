@@ -4,6 +4,7 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 public class ListItem {
 
     private String user_id;
+    private String user_name;
     private String user_avatar;
     private String event_id;
     private String event_title;
@@ -11,8 +12,10 @@ public class ListItem {
     private String event_time;
     private String event_start_time;
     private String event_desc;
+    private String join_time;
     private double event_lat;
     private double event_lng;
+    private int joined_num;
 
     public String getUser_id() {
         return user_id;
@@ -20,6 +23,14 @@ public class ListItem {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getUser_avatar() {
@@ -78,6 +89,14 @@ public class ListItem {
         this.event_desc = event_desc;
     }
 
+    public String getJoin_time() {
+        return join_time;
+    }
+
+    public void setJoin_time(String join_time) {
+        this.join_time = join_time;
+    }
+
     public double getEvent_lat() {
         return event_lat;
     }
@@ -94,4 +113,11 @@ public class ListItem {
         this.event_lng = event_lng;
     }
 
+    public int getJoined_num() {
+        return joined_num;
+    }
+
+    public void setJoined_num(int joined_num) {
+        this.joined_num = joined_num;
+    }
 }

@@ -60,7 +60,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewAuthor.setText(listItem.getEvent_author());
         holder.textViewDesc.setText(listItem.getEvent_desc());
         holder.textViewDate.setText(dateTransform.countDownToDate(listItem.getEvent_time()));
-        holder.texViewStartDate.setText(dateTransform.countDownToEvent(listItem.getEvent_start_time()));
+        holder.textViewStartDate.setText(dateTransform.countDownToEvent(listItem.getEvent_start_time()));
+        holder.textViewJoinCounter.setText(String.valueOf(listItem.getJoined_num()));
 
         Picasso.with(context)
                 .load(listItem.getUser_avatar()).placeholder(R.drawable.ic_placeholder)
@@ -100,7 +101,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         TextView textViewAuthor;
         TextView textViewDesc;
         TextView textViewDate;
-        TextView texViewStartDate;
+        TextView textViewStartDate;
+        TextView textViewJoinCounter;
         LinearLayout linearLayout;
         ImageView imageViewAuthorPicture;
 
@@ -113,7 +115,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             textViewAuthor = (TextView) itemView.findViewById(R.id.textVievAuthor);
             textViewDesc = (TextView) itemView.findViewById(R.id.textVievDesc);
             textViewDate = (TextView) itemView.findViewById(R.id.textVievDate);
-            texViewStartDate = (TextView) itemView.findViewById(R.id.textVievStartDate);
+            textViewStartDate = (TextView) itemView.findViewById(R.id.textVievStartDate);
+            textViewJoinCounter = (TextView) itemView.findViewById(R.id.textVievJoinCounter);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
             imageViewAuthorPicture = (ImageView) itemView.findViewById(R.id.list_item_image_view);
 

@@ -26,9 +26,14 @@ interface RetrofitArrayAPI {
     @POST("/api/v1/events/join")
     Call<ListItem> joinEvent(@Body ListItem listItem);
 
+    @POST("/api/v1/events/who_join")
+    Call<List<ListItem>> whoJoinEvent(@Body ListItem listItem);
+
     @HTTP(method = "DELETE", path = "/api/v1/events", hasBody = true)
     Call<ListItem> DeleteEvent(@Body ListItem listItem);
 
     @HTTP(method = "DELETE", path = "/api/v1/my_events", hasBody = true)
     Call<ListItem> UnsubscribeEvent(@Body ListItem listItem);
+
+
 }
