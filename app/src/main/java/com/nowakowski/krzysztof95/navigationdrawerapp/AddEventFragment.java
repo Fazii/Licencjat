@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -66,8 +65,6 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         GoogleApiClient.OnConnectionFailedListener, LocationListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String url = "http://52.174.235.185";
-    public static final String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
 
     GoogleMap mGoogleMap;
     MapView mMapView;
@@ -77,7 +74,6 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     ActionProcessButton send;
     Button date;
     String dateTime;
-    FrameLayout unlogedView;
 
     double lat;
     double lng;
@@ -89,12 +85,13 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     private EditText titleEditText;
     @NotEmpty(message = "To pole jest wymagane")
     private EditText descEditText;
+    @NotEmpty(message = "Podaj przynajmniej jeden tag")
+    private  EditText tagsEditText;
 
     Validator validator = new Validator(this);
 
 
     public AddEventFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -107,6 +104,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
 
         titleEditText = (EditText) v.findViewById(R.id.titleEditText);
         descEditText = (EditText) v.findViewById(R.id.descEditText);
+        tagsEditText = (EditText) v.findViewById(R.id.tagsEditText);
 
         send = (ActionProcessButton) v.findViewById(R.id.sendButton);
         send.setOnClickListener(this);
@@ -118,7 +116,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         search.setOnClickListener(this);
 
 
-        if(prefs.getString("user_id", "") == ""){
+        if (prefs.getString("user_id", "").equals("")) {
             new AlertDialog.Builder(getContext())
                     .setTitle("Zaloguj się")
                     .setMessage("Aby dodawać wydarzenia musisz być zalogowany")
@@ -132,6 +130,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                         public void onClick(DialogInterface dialog, int which) {
                             titleEditText.setFocusable(false);
                             descEditText.setFocusable(false);
+                            tagsEditText.setFocusable(false);
                             send.setEnabled(false);
                         }
                     })
@@ -147,13 +146,16 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                     send.setProgress(0);
                     Toast.makeText(getContext(), R.string.choose_event_location, Toast.LENGTH_LONG).show();
                     return;
-                } else if (dateTime == null){
-                        send.setMode(ActionProcessButton.Mode.PROGRESS);
-                        send.setProgress(0);
-                        Toast.makeText(getContext(), R.string.choose_event_date, Toast.LENGTH_LONG).show();
-                        return;
+                } else if (dateTime == null) {
+                    send.setMode(ActionProcessButton.Mode.PROGRESS);
+                    send.setProgress(0);
+                    Toast.makeText(getContext(), R.string.choose_event_date, Toast.LENGTH_LONG).show();
+                    return;
                 }
-                CreateNewCommentRequest(titleEditText.getText().toString(),prefs.getString("user_id", ""), prefs.getString("user_picture", ""), prefs.getString("user", ""),  descEditText.getText().toString(), lat, lng, dateTime);
+                CreateNewCommentRequest(titleEditText.getText().toString(),
+                        prefs.getString("user_id", ""), prefs.getString("user_picture", ""),
+                        prefs.getString("user", ""), descEditText.getText().toString(),
+                        tagsEditText.getText().toString(), lat, lng, dateTime);
             }
 
             @Override
@@ -239,13 +241,13 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         });
     }
 
-    public void onSearch(){
+    public void onSearch() {
         EditText location_et = (EditText) v.findViewById(R.id.address_edit_text);
         String location = location_et.getText().toString();
 
         List<Address> addressList;
 
-        if(!location.matches("")){
+        if (!location.matches("")) {
 
             Geocoder geocoder = new Geocoder(getApplicationContext());
             try {
@@ -266,13 +268,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
             } catch (IOException e) {
                 Toast.makeText(getContext(), "Nie znaleziono podanego adresu", Toast.LENGTH_LONG).show();
             }
-
-
-
-
-        }
-
-        else {
+        } else {
             Toast.makeText(getContext(), "Podaj lokalizację", Toast.LENGTH_SHORT).show();
         }
     }
@@ -370,7 +366,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void CreateNewCommentRequest(String title, String user_id, String user_picture, final String author, String desc, double lat, double lng, String dateTime) {
+    private void CreateNewCommentRequest(String title, String user_id, String user_picture, String author, String desc, String tags, double lat, double lng, String dateTime) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -386,6 +382,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         listItem.setUser_avatar(user_picture);
         listItem.setEvent_author(author);
         listItem.setEvent_desc(desc);
+        listItem.setEvent_tag(tags);
         listItem.setEvent_lat(lat);
         listItem.setEvent_lng(lng);
         listItem.setEvent_start_time(dateTime);
@@ -399,6 +396,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 send.setProgress(100);
                 titleEditText.getText().clear();
                 descEditText.getText().clear();
+                tagsEditText.getText().clear();
             }
 
             @Override
@@ -412,15 +410,14 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
 
-        switch(view.getId())
-        {
-            case R.id.sendButton :
+        switch (view.getId()) {
+            case R.id.sendButton:
                 send.setMode(ActionProcessButton.Mode.ENDLESS);
                 send.setProgress(1);
                 validator.validate();
                 break;
 
-            case R.id.date_pick_button :
+            case R.id.date_pick_button:
                 Calendar calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
                 month = calendar.get(Calendar.MONTH);
@@ -433,7 +430,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 datePickerDialog.show();
                 break;
 
-            case R.id.search_address_button :
+            case R.id.search_address_button:
                 onSearch();
                 break;
         }

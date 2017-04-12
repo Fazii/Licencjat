@@ -35,7 +35,6 @@ public class ShowEventsFragment extends Fragment {
 
 
     public ShowEventsFragment() {
-        // Required empty public constructor
     }
 
 

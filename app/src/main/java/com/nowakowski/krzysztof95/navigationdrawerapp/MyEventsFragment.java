@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyEventsFragment extends Fragment {
+public class MyEventsFragment extends Fragment implements View.OnClickListener {
 
 
     private final String url = "http://52.174.235.185";
@@ -67,6 +68,7 @@ public class MyEventsFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_my_events, container, false);
         final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayoutMyEvents);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -133,4 +135,8 @@ public class MyEventsFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }

@@ -13,10 +13,6 @@ import com.nowakowski.krzysztof95.navigationdrawerapp.transform.DateTransform;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Krzysztof on 2017-03-26.
- */
-
 public class rAdapter extends RecyclerView.Adapter<rHolder> {
 
     private List<ListItem> listItems = new ArrayList<>();
@@ -31,8 +27,7 @@ public class rAdapter extends RecyclerView.Adapter<rHolder> {
     @Override
     public rHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.joined_list_item, parent, false);
-        rHolder rHolder = new rHolder(v);
-        return rHolder;
+        return new rHolder(v);
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nowakowski.krzysztof95.navigationdrawerapp.transform.DateTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -54,8 +53,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-import com.nowakowski.krzysztof95.navigationdrawerapp.transform.DateTransform;
-
 
 public class ShowMapFragment extends Fragment implements
         OnMapReadyCallback,
@@ -68,20 +65,20 @@ public class ShowMapFragment extends Fragment implements
     private static final float ACHOR_WINDOWS_V = -9999;
 
 
-    GoogleMap mGoogleMap;
-    MapView mMapView;
-    View v;
-    View info;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    ActionProcessButton join;
-    Animation slideUp;
-    Animation slideDown;
-    List<ListItem> listItems;
-    List<ListItem> listItems1;
-    HashMap<String, ListItem> markerData = new HashMap<>();
-    String MarkerId;
-    SharedPreferences prefs;
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private View v;
+    private View info;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private ActionProcessButton join;
+    private Animation slideUp;
+    private Animation slideDown;
+    private List<ListItem> listItems;
+    private List<ListItem> listItems1;
+    private HashMap<String, ListItem> markerData = new HashMap<>();
+    private String MarkerId;
+    private SharedPreferences prefs;
 
 
     public ShowMapFragment() {
@@ -180,7 +177,7 @@ public class ShowMapFragment extends Fragment implements
                 TextView author = (TextView) info.findViewById(R.id.m_textViewAuthor);
                 TextView desc = (TextView) info.findViewById(R.id.m_textViewDesc);
                 TextView time = (TextView) info.findViewById(R.id.m_textViewTime);
-                TextView start_time = (TextView) info.findViewById(R.id.m_textViewStartTime) ;
+                TextView start_time = (TextView) info.findViewById(R.id.m_textViewStartTime);
 
                 title.setText(listItem.getEvent_title());
                 author.setText(listItem.getEvent_author());
@@ -380,7 +377,7 @@ public class ShowMapFragment extends Fragment implements
         });
     }
 
-    public void IsJoinedEventRequest(String event_id){
+    public void IsJoinedEventRequest(String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -400,10 +397,10 @@ public class ShowMapFragment extends Fragment implements
 
                 try {
                     listItems1.clear();
-                    listItems1= response.body();
+                    listItems1 = response.body();
 
-                    for(int i = 0; i< listItems1.size(); i++){
-                        if(listItems1.get(i).getUser_id().equals(prefs.getString("user_id", ""))){
+                    for (int i = 0; i < listItems1.size(); i++) {
+                        if (listItems1.get(i).getUser_id().equals(prefs.getString("user_id", ""))) {
                             join.setProgress(100);
                             join.setText("Dołączono");
                             join.setClickable(false);

@@ -21,6 +21,7 @@
     <string name="no_data_avalible">Upsss… \n Coś poszło nie tak :(\n\n Przeciągnij w dół aby odświeżyć</string>
     <string name="evants_map">Mapa wydarzeń</string>
     <string name="join">Dołącz</string>
+    <string name="joined">Dołączono</string>
     <string name="choose_event_location">Wybierz lokalizajcę wydarzenia</string>
     <string name="error">Błąd</string>
     <string name="delete">Usuń</string>
@@ -37,5 +38,8 @@
     <string name="choose_event_date">Wybierz datę wydarzenia</string>
     <string name="my_events">Moje wydarzenia</string>
     <string name="facebook_login_info">Aby móc dodawać wydarzenia i do nich dołączać konieczne jest zalogowanie się do aplikacji poprzez Twoje konto Facebook. Nie udostepniamy nic na Twoje tablicy.</string>
+    <string name="avatar">Avatar</string>
+    <string name="see_who_join">Zobacz kto dołączył</string>
+    <string name="event_tags">Tagi, oddzielone przecinkami</string>
 
 </resources>

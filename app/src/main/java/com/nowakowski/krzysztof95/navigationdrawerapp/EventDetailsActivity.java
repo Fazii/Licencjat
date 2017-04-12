@@ -238,12 +238,12 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         String event_id = getIntent().getStringExtra("id");
         UnsubscribeEventRequest(prefs.getString("user_id", ""), event_id);
 
-        join.setText("Dołącz");
+        join.setText(getString(R.string.join));
         join.setClickable(true);
     }
 
     public void onJoinEventClick(View view) {
-        join.setText("Dołączono");
+        join.setText(getString(R.string.joined));
         join.setClickable(false);
 
         unsubscribeEvent.setVisibility(View.VISIBLE);
@@ -257,7 +257,6 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     public void onShowWhoJoinEventClick(View view) {
         ShowDialogWhoJoin();
-
     }
 
     private void  ShowDialogWhoJoin(){
@@ -336,7 +335,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
                     for(int i = 0; i< listItems1.size(); i++){
                         if(listItems1.get(i).getUser_id().equals(prefs.getString("user_id", ""))){
-                            join.setText("Dołączono");
+                            join.setText(getString(R.string.joined));
                             join.setClickable(false);
                         }
                     }

@@ -8,17 +8,13 @@ import android.widget.TextView;
 import com.nowakowski.krzysztof95.navigationdrawerapp.R;
 
 
-/**
- * Created by Krzysztof on 2017-03-26.
- */
-
-public class rHolder  extends RecyclerView.ViewHolder {
+class rHolder  extends RecyclerView.ViewHolder {
 
     TextView nameTextView;
     TextView dateTextView;
     ImageView avatarImageView;
 
-    public rHolder(View itemView) {
+    rHolder(View itemView) {
         super(itemView);
 
         nameTextView = (TextView) itemView.findViewById(R.id.textViewAuthor_details);

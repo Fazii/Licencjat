@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 
-public class VievPagerAdapter extends FragmentPagerAdapter {
-        Context ctxt=null;
+class VievPagerAdapter extends FragmentPagerAdapter {
+        private Context ctxt=null;
 
-        public VievPagerAdapter(Context ctxt, FragmentManager mgr) {
+        VievPagerAdapter(Context ctxt, FragmentManager mgr) {
             super(mgr);
             this.ctxt=ctxt;
         }
