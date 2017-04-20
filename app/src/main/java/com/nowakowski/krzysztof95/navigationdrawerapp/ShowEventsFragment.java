@@ -3,14 +3,22 @@ package com.nowakowski.krzysztof95.navigationdrawerapp;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +44,16 @@ public class ShowEventsFragment extends Fragment {
 
     public ShowEventsFragment() {
     }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
 
 
     @Override
@@ -43,6 +61,7 @@ public class ShowEventsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_show_events, container, false);
+
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -58,12 +77,73 @@ public class ShowEventsFragment extends Fragment {
 
         listItems = new ArrayList<>();
 
-        loadRecycleViewData();
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            String query = bundle.getString("query", "");
+            loadFilteredRecycleViewData(query);
+        }
+        else loadRecycleViewData();
 
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
 
         return v;
+    }
+
+    private void loadFilteredRecycleViewData(String tag) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getString(R.string.Loading_data));
+        progressDialog.show();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitArrayAPI service = retrofit.create(RetrofitArrayAPI.class);
+
+        ListItem requestItems = new ListItem();
+        requestItems.setEvent_tag(tag);
+
+        Call<List<ListItem>> call = service.getEventsDetailsTags(requestItems);
+
+        call.enqueue(new Callback<List<ListItem>>() {
+
+            @Override
+            public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+
+                try {
+                    listItems.clear();
+                    listItems = response.body();
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    progressDialog.dismiss();
+
+                    adapter = new MyAdapter(listItems, getContext(), SHOW_EVENTS_CLASS);
+
+                    recyclerView.setAdapter(adapter);
+
+                    if (adapter.getItemCount() == 0) {
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListItem>> call, Throwable t) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                progressDialog.dismiss();
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void loadRecycleViewData() {

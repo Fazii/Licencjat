@@ -86,6 +86,7 @@ public class ShowMapFragment extends Fragment implements
     }
 
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

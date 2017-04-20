@@ -23,6 +23,9 @@ interface RetrofitArrayAPI {
     @POST("/api/v1/my_events")
     Call<List<ListItem>> getMyEvents(@Body ListItem listItem);
 
+    @POST("/api/v1/events_tag")
+    Call<List<ListItem>> getEventsDetailsTags(@Body ListItem listItem);
+
     @POST("/api/v1/events/join")
     Call<ListItem> joinEvent(@Body ListItem listItem);
 
