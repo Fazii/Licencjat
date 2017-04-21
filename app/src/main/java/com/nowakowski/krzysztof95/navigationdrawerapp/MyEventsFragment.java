@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -26,11 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class MyEventsFragment extends Fragment implements View.OnClickListener {
+public class MyEventsFragment extends Fragment {
 
 
     private final String url = "http://52.174.235.185";
@@ -42,10 +37,8 @@ public class MyEventsFragment extends Fragment implements View.OnClickListener {
     private MyAdapter adapter;
     private FrameLayout emptyView;
     private List<ListItem> responseItems;
-    View v;
 
     public MyEventsFragment() {
-        // Required empty public constructor
     }
 
     static MyEventsFragment newInstance(int position) {
@@ -65,8 +58,8 @@ public class MyEventsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_my_events, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_my_events, container, false);
         final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayoutMyEvents);
@@ -133,10 +126,5 @@ public class MyEventsFragment extends Fragment implements View.OnClickListener {
                 emptyView.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 }

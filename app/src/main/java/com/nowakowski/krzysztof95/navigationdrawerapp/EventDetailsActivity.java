@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -49,18 +49,19 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private static final String url = "http://52.174.235.185";
     private static final String JOINED_EVENT_CLASS="joined";
     private GoogleMap mMap;
-    double lat;
-    double lng;
-    SharedPreferences prefs;
-    Button unsubscribeEvent;
-    Button join;
-    RecyclerView recyclerView;
-    rAdapter rAdapter;
-    View mViev;
+    private double lat;
+    private double lng;
+    private SharedPreferences prefs;
+    private Button unsubscribeEvent;
+    private Button join;
+    private Button deleteEvent;
+    private RecyclerView recyclerView;
+    private rAdapter rAdapter;
+    private View mViev;
     private List<ListItem> listItems;
     private List<ListItem> listItems1;
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +82,16 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         listItems1 = new ArrayList<>();
         IsJoinedEventRequest(getIntent().getStringExtra("id"));
 
-        Button deleteEvent = (Button) findViewById(R.id.delete_event_button);
+        deleteEvent = (Button) findViewById(R.id.delete_event_button);
         unsubscribeEvent = (Button) findViewById(R.id.unsubscribe_event_button);
         join = (Button) findViewById(R.id.join_event_button);
 
+        onCheck();
 
+        setInfo();
+    }
+
+    private void onCheck() {
         if (prefs.getString("user_id", "").equals("")) {
             join.setVisibility(View.GONE);
             join.setClickable(false);
@@ -101,14 +107,15 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             deleteEvent.setVisibility(View.GONE);
             deleteEvent.setClickable(false);
         }
+    }
 
-
+    private void setInfo() {
         TextView textViewTitle = (TextView) findViewById(R.id.d_textViewTitle);
         TextView textViewAuthor = (TextView) findViewById(R.id.d_textViewAuthor);
         TextView textViewDesc = (TextView) findViewById(R.id.d_textViewDesc);
         TextView textViewTime = (TextView) findViewById(R.id.d_textViewTime);
         TextView textViewStartTime = (TextView) findViewById(R.id.d_textViewStartTime);
-        ImageView imageVievAvatar = (ImageView) findViewById(R.id.d_imageView);
+        ImageView imageViewAvatar = (ImageView) findViewById(R.id.d_imageView);
         lat = getIntent().getDoubleExtra("lat", 0);
         lng = getIntent().getDoubleExtra("lng", 0);
 
@@ -120,8 +127,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
         Picasso.with(getApplicationContext())
                 .load(getIntent().getStringExtra("user_avatar")).placeholder(R.drawable.ic_placeholder)
-                .error(R.drawable.ic_placeholder).resize(100, 100).transform(new CircleTransform()).into(imageVievAvatar);
-
+                .error(R.drawable.ic_placeholder).resize(100, 100).transform(new CircleTransform()).into(imageViewAvatar);
     }
 
     @Override

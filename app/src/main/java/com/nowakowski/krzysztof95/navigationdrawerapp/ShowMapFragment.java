@@ -79,12 +79,11 @@ public class ShowMapFragment extends Fragment implements
     private HashMap<String, ListItem> markerData = new HashMap<>();
     private String MarkerId;
     private SharedPreferences prefs;
+    private ListItem listItem;
 
 
     public ShowMapFragment() {
-        // Required empty public constructor
     }
-
 
 
     @Override
@@ -109,7 +108,7 @@ public class ShowMapFragment extends Fragment implements
         join = (ActionProcessButton) v.findViewById(R.id.join_event);
         join.setOnClickListener(this);
 
-        if (prefs.getString("user_id", "") == "") {
+        if (prefs.getString("user_id", "").equals("")) {
             join.setVisibility(View.GONE);
             join.setClickable(false);
         }
@@ -140,21 +139,7 @@ public class ShowMapFragment extends Fragment implements
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.41177549551888, 19.17423415929079), (float) 5.3173866));
         loadEventsMarkers();
 
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                mGoogleMap.setMyLocationEnabled(true);
-            } else {
-                checkLocationPermission();
-            }
-        } else {
-            buildGoogleApiClient();
-            mGoogleMap.setMyLocationEnabled(true);
-        }
-
+        checkPermission();
 
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -166,30 +151,11 @@ public class ShowMapFragment extends Fragment implements
                 join.setProgress(0);
 
                 MarkerId = marker.getTitle();
-                ListItem listItem = markerData.get(MarkerId);
+                listItem = markerData.get(MarkerId);
 
                 IsJoinedEventRequest(marker.getTitle());
 
-                DateTransform dateTransform = new DateTransform();
-
-
-                ImageView imageViewAvatar = (ImageView) v.findViewById(R.id.m_imageView);
-                TextView title = (TextView) info.findViewById(R.id.m_textViewTitle);
-                TextView author = (TextView) info.findViewById(R.id.m_textViewAuthor);
-                TextView desc = (TextView) info.findViewById(R.id.m_textViewDesc);
-                TextView time = (TextView) info.findViewById(R.id.m_textViewTime);
-                TextView start_time = (TextView) info.findViewById(R.id.m_textViewStartTime);
-
-                title.setText(listItem.getEvent_title());
-                author.setText(listItem.getEvent_author());
-                desc.setText(listItem.getEvent_desc());
-                time.setText(dateTransform.countDownToDate(listItem.getEvent_time()));
-                start_time.setText(dateTransform.countDownToEvent(listItem.getEvent_start_time()));
-
-                Picasso.with(getApplicationContext())
-                        .load(listItem.getUser_avatar()).placeholder(R.drawable.ic_placeholder)
-                        .error(R.drawable.ic_placeholder).resize(100, 100).into(imageViewAvatar);
-
+                setInfoContent();
 
                 if (info.getVisibility() == View.INVISIBLE) {
                     info.startAnimation(slideDown);
@@ -210,6 +176,42 @@ public class ShowMapFragment extends Fragment implements
                 }
             }
         });
+    }
+
+    private void setInfoContent() {
+        DateTransform dateTransform = new DateTransform();
+        ImageView imageViewAvatar = (ImageView) v.findViewById(R.id.m_imageView);
+        TextView title = (TextView) info.findViewById(R.id.m_textViewTitle);
+        TextView author = (TextView) info.findViewById(R.id.m_textViewAuthor);
+        TextView desc = (TextView) info.findViewById(R.id.m_textViewDesc);
+        TextView time = (TextView) info.findViewById(R.id.m_textViewTime);
+        TextView start_time = (TextView) info.findViewById(R.id.m_textViewStartTime);
+
+        title.setText(listItem.getEvent_title());
+        author.setText(listItem.getEvent_author());
+        desc.setText(listItem.getEvent_desc());
+        time.setText(dateTransform.countDownToDate(listItem.getEvent_time()));
+        start_time.setText(dateTransform.countDownToEvent(listItem.getEvent_start_time()));
+
+        Picasso.with(getApplicationContext())
+                .load(listItem.getUser_avatar()).placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_placeholder).resize(100, 100).into(imageViewAvatar);
+    }
+
+    private void checkPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+                mGoogleMap.setMyLocationEnabled(true);
+            } else {
+                checkLocationPermission();
+            }
+        } else {
+            buildGoogleApiClient();
+            mGoogleMap.setMyLocationEnabled(true);
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -82,11 +81,8 @@ public class FacebookLoginActivity extends AppCompatActivity {
                     editor.putString("user", currentProfile.getName());
                     editor.putString("user_picture",currentProfile.getProfilePictureUri(150, 150).toString());
                     editor.putBoolean("valid", true);
-
-
                     editor.apply();
 
-                    Log.d("FB", prefs.getString("user", ""));
                 } else {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.remove("user_id");

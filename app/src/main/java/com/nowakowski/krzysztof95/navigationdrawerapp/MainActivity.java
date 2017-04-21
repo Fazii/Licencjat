@@ -46,28 +46,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
-        //noinspection StatementWithEmptyBody
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{
-                            android.Manifest.permission.ACCESS_FINE_LOCATION,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    1);
-        }
-
+        onCheckPermission();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        onSearchView();
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        searchView = (MaterialSearchView)findViewById(R.id.search_view);
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView navUsername = (TextView) headerView.findViewById(R.id.name_nav_header);
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
+
+        Picasso.with(getApplicationContext())
+                .load(prefs.getString("user_picture", "https://static-hive-images-ticketlabsinc1.netdna-ssl.com/upload/c_fill,g_faces,h_150,w_150/placeholder-man_vqukjf.jpg")).transform(new CircleTransform()).into(imageView);
+
+        navUsername.setText(prefs.getString("user", "MeetWithMe"));
+        navigationView.setNavigationItemSelectedListener(this);
+
+        setTitle(getString(R.string.show_events));
+        showEventsFragment = new ShowEventsFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showEventsFragment, "ShowEvents");
+        fragmentTransaction.commit();
+    }
+
+    private void onSearchView() {
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -100,33 +114,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
 
-    });
+        });
+    }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+    private void onCheckPermission() {
+        //noinspection StatementWithEmptyBody
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
 
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-
-        TextView navUsername = (TextView) headerView.findViewById(R.id.name_nav_header);
-        ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
-
-        Picasso.with(getApplicationContext())
-                .load(prefs.getString("user_picture","https://static-hive-images-ticketlabsinc1.netdna-ssl.com/upload/c_fill,g_faces,h_150,w_150/placeholder-man_vqukjf.jpg")).transform(new CircleTransform()).into(imageView);
-
-        navUsername.setText(prefs.getString("user", "MeetWithMe"));
-        navigationView.setNavigationItemSelectedListener(this);
-
-        setTitle(getString(R.string.show_events));
-        showEventsFragment = new ShowEventsFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.relativelayout_for_fragment, showEventsFragment, "ShowEvents");
-        fragmentTransaction.commit();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1);
+        }
     }
 
 
@@ -152,15 +155,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         return id == R.id.action_search || super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

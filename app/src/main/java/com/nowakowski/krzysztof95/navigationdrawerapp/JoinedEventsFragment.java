@@ -37,10 +37,8 @@ public class JoinedEventsFragment extends Fragment {
     private MyAdapter adapter;
     private FrameLayout emptyView;
     private List<ListItem> responseItems;
-    View v;
 
     public JoinedEventsFragment() {
-        // Required empty public constructor
     }
 
     static JoinedEventsFragment newInstance(int position) {
@@ -60,8 +58,8 @@ public class JoinedEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_joined_events, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_joined_events, container, false);
         final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayoutJoinedEvents);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

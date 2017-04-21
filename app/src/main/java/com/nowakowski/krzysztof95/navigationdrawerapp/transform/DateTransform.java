@@ -5,9 +5,6 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 
-/**
- * Created by Krzysztof on 2017-03-25.
- */
 
 public class DateTransform {
 

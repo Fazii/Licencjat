@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "910729704601",
+    "firebase_url": "https://miwone-41598.firebaseio.com",
+    "project_id": "miwone-41598",
+    "storage_bucket": "miwone-41598.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910729704601:android:116da500776741c1",
+        "android_client_info": {
+          "package_name": "com.nowakowski.krzysztof95.navigationdrawerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "910729704601-gasc4vetp8ol6vgu2j9r7o6r52pc9rdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaBD9HNNLXyEG6CjDmp3i94LdnfIknXVk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

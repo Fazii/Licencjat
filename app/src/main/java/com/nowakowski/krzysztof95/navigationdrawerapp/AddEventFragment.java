@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +46,9 @@ import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
-import android.text.format.DateFormat;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
-
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,20 +64,20 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
 
     private static final String url = "http://52.174.235.185";
 
-    GoogleMap mGoogleMap;
-    MapView mMapView;
-    View v;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    ActionProcessButton send;
-    Button date;
-    String dateTime;
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private View v;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private ActionProcessButton send;
+    private Button date;
+    private String dateTime;
 
-    double lat;
-    double lng;
+    private double lat;
+    private double lng;
 
-    int year, month, day, hour, minute;
-    int yearF, monthF, dayF, hourF, minuteF;
+    private int year, month, day, hour, minute;
+    private int yearF, monthF, dayF, hourF, minuteF;
 
     @NotEmpty(message = "To pole jest wymagane")
     private EditText titleEditText;
@@ -88,7 +86,9 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     @NotEmpty(message = "Podaj przynajmniej jeden tag")
     private  EditText tagsEditText;
 
-    Validator validator = new Validator(this);
+    private Validator validator = new Validator(this);
+
+    private SharedPreferences prefs;
 
 
     public AddEventFragment() {
@@ -100,7 +100,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
 
         v = inflater.inflate(R.layout.fragment_add_event, container, false);
 
-        final SharedPreferences prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences("Name", Context.MODE_PRIVATE);
 
         titleEditText = (EditText) v.findViewById(R.id.titleEditText);
         descEditText = (EditText) v.findViewById(R.id.descEditText);
@@ -115,7 +115,12 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         Button search = (Button) v.findViewById(R.id.search_address_button);
         search.setOnClickListener(this);
 
+        onValidate();
 
+        return v;
+    }
+
+    private void onValidate() {
         if (prefs.getString("user_id", "").equals("")) {
             new AlertDialog.Builder(getContext())
                     .setTitle("Zaloguj się")
@@ -176,7 +181,6 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         });
-        return v;
     }
 
     @Override
@@ -210,19 +214,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(52.41177549551888, 19.17423415929079), (float) 5.3173866));
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                mGoogleMap.setMyLocationEnabled(true);
-            } else {
-                checkLocationPermission();
-            }
-        } else {
-            buildGoogleApiClient();
-            mGoogleMap.setMyLocationEnabled(true);
-        }
+        permissionCheck();
 
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
@@ -239,6 +231,22 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
                 lng = point.longitude;
             }
         });
+    }
+
+    private void permissionCheck() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+                mGoogleMap.setMyLocationEnabled(true);
+            } else {
+                checkLocationPermission();
+            }
+        } else {
+            buildGoogleApiClient();
+            mGoogleMap.setMyLocationEnabled(true);
+        }
     }
 
     public void onSearch() {
@@ -456,7 +464,6 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         hourF = i;
         minuteF = i1;
-
 
         dateTime = (yearF + "-" + monthF + "-" + dayF + " " + hourF + ":" + minuteF + ":00");
     }
