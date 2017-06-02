@@ -60,7 +60,7 @@ public class ShowMapFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, View.OnClickListener {
 
-    private final String url = "http://52.174.235.185";
+    private final static String url = "http://52.15.208.165";
     private static final float ACHOR_WINDOWS_U = -9999;
     private static final float ACHOR_WINDOWS_V = -9999;
 

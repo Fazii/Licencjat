@@ -21,10 +21,9 @@ import java.util.Arrays;
 
 public class FacebookLoginActivity extends AppCompatActivity {
 
-    LoginButton loginButton;
-    CallbackManager callbackManager;
-    ProfileTracker profileTracker;
-    SharedPreferences prefs;
+    private CallbackManager callbackManager;
+    private ProfileTracker profileTracker;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        loginButton = (LoginButton) findViewById(R.id.fb_login_button);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login_button);
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.setReadPermissions(Arrays.asList(

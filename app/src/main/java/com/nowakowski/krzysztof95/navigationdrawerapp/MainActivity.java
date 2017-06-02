@@ -31,9 +31,9 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ShowEventsFragment showEventsFragment;
-    MaterialSearchView searchView;
-    Menu menu;
+    private ShowEventsFragment showEventsFragment;
+    private MaterialSearchView searchView;
+    private Menu menu;
 
 
     @Override
@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onSearchView() {
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
+
+        searchView.setHintTextColor(getResources().getColor(R.color.grey));
+        searchView.setHint(getString(R.string.write_event_tag));
+
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -201,20 +205,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                finish();
-                startActivity(getIntent());
-            }
-            if (resultCode == RESULT_CANCELED) {
-
-            }
-        }
     }
 }

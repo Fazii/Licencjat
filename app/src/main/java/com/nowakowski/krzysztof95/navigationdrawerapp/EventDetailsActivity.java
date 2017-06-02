@@ -46,7 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class EventDetailsActivity extends AppCompatActivity implements OnMapReadyCallback{
-    private static final String url = "http://52.174.235.185";
+    private static final String URL = "http://52.15.208.165";
     private static final String JOINED_EVENT_CLASS="joined";
     private GoogleMap mMap;
     private double lat;
@@ -142,7 +142,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void DeleteEventRequest(String event_id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -178,7 +178,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void UnsubscribeEventRequest(String user_id, String event_id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -208,7 +208,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private void JoinEventRequest(final String user_id, final String user_name, final String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -284,7 +284,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -320,7 +320,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     public void IsJoinedEventRequest(String event_id){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

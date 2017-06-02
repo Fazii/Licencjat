@@ -6,5 +6,6 @@
     <color name="lightBlue">#d4f1f2</color>
     <color name="lightPurple">#f4f2f5</color>
     <color name="black">#000000</color>
+    <color name="grey">#838383</color>
     <color name="white">#FFFFFF</color>
 </resources>

@@ -62,7 +62,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class AddEventFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private static final String url = "http://52.174.235.185";
+    private static final String URL = "http://52.15.208.165";
 
     private GoogleMap mGoogleMap;
     private MapView mMapView;
@@ -377,7 +377,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     private void CreateNewCommentRequest(String title, String user_id, String user_picture, String author, String desc, String tags, double lat, double lng, String dateTime) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

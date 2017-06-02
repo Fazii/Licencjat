@@ -28,7 +28,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<ListItem> listItems = new ArrayList<>();
     private Context context;
     private String className;
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
 
     MyAdapter(List<ListItem> listItems, Context context, String className) {
         this.listItems = listItems;

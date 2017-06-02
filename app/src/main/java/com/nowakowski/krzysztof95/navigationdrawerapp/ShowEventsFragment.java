@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShowEventsFragment extends Fragment {
 
-    private static final String url = "http://52.174.235.185";
+    private static final String URL = "http://52.15.208.165";
     private static final String SHOW_EVENTS_CLASS = "showEvents";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -83,6 +83,7 @@ public class ShowEventsFragment extends Fragment {
         return v;
     }
 
+
     private void loadFilteredRecycleViewData(String tag) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.Loading_data));
@@ -90,7 +91,7 @@ public class ShowEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -146,7 +147,7 @@ public class ShowEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

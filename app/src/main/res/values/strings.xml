@@ -41,5 +41,6 @@
     <string name="avatar">Avatar</string>
     <string name="see_who_join">Zobacz kto dołączył</string>
     <string name="event_tags">Tagi, oddzielone przecinkami</string>
+    <string name="write_event_tag">Podaj tag wydarzenia</string>
 
 </resources>

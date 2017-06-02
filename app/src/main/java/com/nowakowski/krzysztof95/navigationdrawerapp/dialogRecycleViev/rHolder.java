@@ -2,7 +2,6 @@ package com.nowakowski.krzysztof95.navigationdrawerapp.dialogRecycleViev;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nowakowski.krzysztof95.navigationdrawerapp.R;
@@ -12,7 +11,6 @@ class rHolder  extends RecyclerView.ViewHolder {
 
     TextView nameTextView;
     TextView dateTextView;
-    ImageView avatarImageView;
 
     rHolder(View itemView) {
         super(itemView);

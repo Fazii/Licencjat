@@ -28,7 +28,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class JoinedEventsFragment extends Fragment {
 
-    private final String url = "http://52.174.235.185";
+    private static final String URL = "http://52.15.208.165";
     private static final String KEY_POSITION="position";
     private static final String JOINED_EVENT_CLASS="joined";
 
@@ -87,7 +87,7 @@ public class JoinedEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
