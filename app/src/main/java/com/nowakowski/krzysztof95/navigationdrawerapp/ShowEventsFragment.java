@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.API_URL;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.SHOW_EVENTS_CLASS;
+
 
 public class ShowEventsFragment extends Fragment {
 
-    private static final String URL = "http://52.15.208.165";
-    private static final String SHOW_EVENTS_CLASS = "showEvents";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -91,7 +93,7 @@ public class ShowEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -136,6 +138,7 @@ public class ShowEventsFragment extends Fragment {
                 progressDialog.dismiss();
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "Błąd połączenia", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -147,7 +150,7 @@ public class ShowEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

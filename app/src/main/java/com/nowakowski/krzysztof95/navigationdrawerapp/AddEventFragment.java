@@ -57,12 +57,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.API_URL;
 
 
 public class AddEventFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private static final String URL = "http://52.15.208.165";
 
     private GoogleMap mGoogleMap;
     private MapView mMapView;
@@ -377,7 +377,7 @@ public class AddEventFragment extends Fragment implements View.OnClickListener, 
     private void CreateNewCommentRequest(String title, String user_id, String user_picture, String author, String desc, String tags, double lat, double lng, String dateTime) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

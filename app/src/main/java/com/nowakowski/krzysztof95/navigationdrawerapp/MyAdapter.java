@@ -21,10 +21,10 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.DELETE_COMMENT_REQUEST;
+
 
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-
-    private static final int DELETE_COMMENT_REQUEST = 1;
     private List<ListItem> listItems = new ArrayList<>();
     private Context context;
     private String className;

@@ -24,13 +24,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.API_URL;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.KEY_POSITION;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.MY_EVENTS_CLASS;
 
 public class MyEventsFragment extends Fragment {
-
-
-    private final static String url = "http://52.15.208.165";
-    private static final String KEY_POSITION="position";
-    private static final String MY_EVENTS_CLASS="myevents";
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -88,7 +86,7 @@ public class MyEventsFragment extends Fragment {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

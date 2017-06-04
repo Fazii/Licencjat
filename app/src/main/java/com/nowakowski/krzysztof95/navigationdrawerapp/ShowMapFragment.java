@@ -52,6 +52,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.ACHOR_WINDOWS_U;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.ACHOR_WINDOWS_V;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.API_URL;
 
 
 public class ShowMapFragment extends Fragment implements
@@ -59,11 +62,6 @@ public class ShowMapFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, View.OnClickListener {
-
-    private final static String url = "http://52.15.208.165";
-    private static final float ACHOR_WINDOWS_U = -9999;
-    private static final float ACHOR_WINDOWS_V = -9999;
-
 
     private GoogleMap mGoogleMap;
     private MapView mMapView;
@@ -311,7 +309,7 @@ public class ShowMapFragment extends Fragment implements
         progressDialog.setMessage(getString(R.string.Loading_data));
         progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -351,7 +349,7 @@ public class ShowMapFragment extends Fragment implements
     private void JoinEventRequest(String user_id, String user_name, String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -383,7 +381,7 @@ public class ShowMapFragment extends Fragment implements
     public void IsJoinedEventRequest(String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

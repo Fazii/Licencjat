@@ -43,11 +43,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.API_URL;
+import static com.nowakowski.krzysztof95.navigationdrawerapp.ConfigurationConstants.JOINED_EVENT_CLASS;
 
 
 public class EventDetailsActivity extends AppCompatActivity implements OnMapReadyCallback{
-    private static final String URL = "http://52.15.208.165";
-    private static final String JOINED_EVENT_CLASS="joined";
+
     private GoogleMap mMap;
     private double lat;
     private double lng;
@@ -142,7 +143,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void DeleteEventRequest(String event_id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -178,7 +179,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void UnsubscribeEventRequest(String user_id, String event_id) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -208,7 +209,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private void JoinEventRequest(final String user_id, final String user_name, final String event_id) {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -284,7 +285,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -320,7 +321,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     public void IsJoinedEventRequest(String event_id){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
